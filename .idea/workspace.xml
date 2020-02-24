@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bd6fe040-46be-44f5-8e79-dc1c859b34b6" name="Default Changelist" comment="" />
+    <list default="true" id="bd6fe040-46be-44f5-8e79-dc1c859b34b6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/scala/cobalt/parser/statement/StatementParserTest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/cobalt/parser/statement/StatementParserTest.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/test-classes/cobalt/parser/statement/StatementParserTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/test-classes/cobalt/parser/statement/StatementParserTest.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,6 +27,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="gumoFEDp" />
   </component>
@@ -35,6 +43,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/scala/transpiler" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -104,7 +113,6 @@
       <option name="showProgressMessages" value="true" />
       <option name="testArgs" value="" />
       <option name="testClassPath" value="cobalt.parser.expression.AExprParserTest" />
-      <option name="testName" value="Number parsers Should parse integers" />
       <option name="useSbt" value="false" />
       <option name="useUiWithSbt" value="false" />
       <option name="workingDirectory" value="C:\Users\Michael\Desktop\javascript-transpiler" />
@@ -125,7 +133,6 @@
       <option name="showProgressMessages" value="true" />
       <option name="testArgs" value="" />
       <option name="testClassPath" value="cobalt.parser.expression.AExprParserTest" />
-      <option name="testName" value="Number parsers Should parse integers&#10;Number parsers Should parse negative" />
       <option name="useSbt" value="false" />
       <option name="useUiWithSbt" value="false" />
       <option name="workingDirectory" value="C:\Users\Michael\Desktop\javascript-transpiler" />
@@ -146,7 +153,6 @@
       <option name="showProgressMessages" value="true" />
       <option name="testArgs" value="" />
       <option name="testClassPath" value="cobalt.parser.expression.IdentifierParserTest" />
-      <option name="testName" value="Identifier parser Should parse identifiers" />
       <option name="useSbt" value="false" />
       <option name="useUiWithSbt" value="false" />
       <option name="workingDirectory" value="C:\Users\Michael\Desktop\javascript-transpiler" />
@@ -167,7 +173,6 @@
       <option name="showProgressMessages" value="true" />
       <option name="testArgs" value="" />
       <option name="testClassPath" value="cobalt.parser.statement.StatementParserTest" />
-      <option name="testName" value="Statement parser Should parse statements" />
       <option name="useSbt" value="false" />
       <option name="useUiWithSbt" value="false" />
       <option name="workingDirectory" value="C:\Users\Michael\Desktop\javascript-transpiler" />
@@ -260,22 +265,22 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1010" y="454" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582475285710" />
-    <state width="2516" height="401" key="GridCell.Tab.0.bottom" timestamp="1582487154329">
+    <state width="2516" height="401" key="GridCell.Tab.0.bottom" timestamp="1582488722248">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2516" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582487154329" />
-    <state width="2516" height="401" key="GridCell.Tab.0.center" timestamp="1582487154328">
+    <state width="2516" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582488722248" />
+    <state width="2516" height="401" key="GridCell.Tab.0.center" timestamp="1582488722248">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2516" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582487154328" />
-    <state width="2516" height="401" key="GridCell.Tab.0.left" timestamp="1582487154328">
+    <state width="2516" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582488722248" />
+    <state width="2516" height="401" key="GridCell.Tab.0.left" timestamp="1582488722248">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2516" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582487154328" />
-    <state width="2516" height="401" key="GridCell.Tab.0.right" timestamp="1582487154328">
+    <state width="2516" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582488722248" />
+    <state width="2516" height="401" key="GridCell.Tab.0.right" timestamp="1582488722248">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2516" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582487154328" />
+    <state width="2516" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582488722248" />
     <state x="976" y="523" key="com.intellij.ide.util.TipDialog" timestamp="1582297220620">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -284,5 +289,9 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="976" y="432" width="737" height="606" key="find.popup/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582469636703" />
+    <state x="936" y="353" width="672" height="676" key="search.everywhere.popup" timestamp="1582502477726">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="936" y="353" width="672" height="676" key="search.everywhere.popup/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582502477726" />
   </component>
 </project>

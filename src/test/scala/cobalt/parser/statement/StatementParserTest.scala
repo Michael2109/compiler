@@ -1,15 +1,18 @@
 package cobalt.parser.statement
 
+import cobalt.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
+import transpiler.ast.AST.identifier
+import transpiler.parser.StatementParser
 
 class StatementParserTest extends AnyFunSpec with Matchers {
    describe("Statement parser") {
      it("Should parse statements") {
-      /* val code =
-         """if true then x else y
+       val code =
+         """x = 10
            """.stripMargin.replace("\r", "")
-       TestUtil.parse(code, ExpressionParser.expressionParser(_)) shouldBe Ternary(Identifier(Name("true")), Identifier(Name("x")), Identifier(Name("y")))*/
+       TestUtil.parse(code, StatementParser.file_input(_)) shouldBe identifier("")
        println()
      }
    }
