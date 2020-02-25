@@ -3,7 +3,7 @@ package compiler.codegen
 import java.io.PrintWriter
 
 import javassist.{ClassPool, CtNewMethod}
-import javassist.bytecode.{ClassFile, MethodInfo}
+import javassist.bytecode.{Bytecode, ClassFile, MethodInfo}
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter
 import jdk.internal.org.objectweb.asm.{ClassReader, ClassWriter, Opcodes}
 import compiler.ast.IR.{ClassIR, CompilationUnitIR, MethodIR}
@@ -14,8 +14,8 @@ object CodeGen {
   val version = 49
 
 
-  def genCompilationUnitIRCode(compilationUnitIR: CompilationUnitIR): List[Array[Byte]] ={
-
+  def genCompilationUnitIRCode(compilationUnitIR: CompilationUnitIR): List[Array[Byte]] =   {
+null
   }
 
   def genClassIRCode(classIR: ClassIR): Array[Byte] ={
@@ -24,17 +24,31 @@ object CodeGen {
 
     val classFile = new ClassFile(false, classIR.identifier, null)
 
-    classPool.makeClass(classFile).toBytecode
+    classIR.methods.foreach(method => genMethodIRCode(classFile, method))
 
+    classPool.makeClass(classFile).toBytecode
   }
 
   def genMethodIRCode(classFile: ClassFile, methodIR: MethodIR): Unit ={
-    //int modifiers, CtClass returnType,
-    //                                String mname, CtClass[] parameters,
-    //                                CtClass[] exceptions,
-    //                                String body, CtClass declaring
-    val method = CtNewMethod.make()
-    classFile.addMethod()
+
+    val code = new Bytecode(classFile.getConstPool)
+
+    if(methodIR.identifier.equals(MethodInfo.nameInit)) {
+      code.addAload(0)
+      code.addInvokespecial("java/lang/Object", MethodInfo.nameInit, "()V")
+      code.addReturn(null)
+      code.setMaxLocals(1)
+    }
+
+    if(methodIR.`type`.equals("V"))
+    {
+      code.addReturn(null)
+    }
+
+    val methodInfo = new MethodInfo(classFile.getConstPool,methodIR.identifier, "()" + methodIR.`type`)
+    methodInfo.setCodeAttribute(code.toCodeAttribute)
+
+    classFile.addMethod(methodInfo)
   }
 
 /*
