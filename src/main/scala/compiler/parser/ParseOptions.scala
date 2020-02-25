@@ -1,4 +1,4 @@
-package transpiler.parser
+package compiler.parser
 
 class ParseOptions {
 

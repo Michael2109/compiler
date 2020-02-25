@@ -3,7 +3,7 @@ package cobalt.utils
 import java.io.File
 import java.nio.file.{Path, Paths}
 
-import transpiler.compiler.CompilerExecutor
+import compiler.compiler.CompilerExecutor
 
 import scala.language.postfixOps
 import scala.sys.process._

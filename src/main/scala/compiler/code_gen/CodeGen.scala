@@ -1,4 +1,4 @@
-package transpiler.code_gen
+package compiler.code_gen
 
 import java.io.PrintWriter
 
@@ -6,7 +6,7 @@ import javassist.{ClassPool, CtNewMethod}
 import javassist.bytecode.{ClassFile, MethodInfo}
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter
 import jdk.internal.org.objectweb.asm.{ClassReader, ClassWriter, Opcodes}
-import transpiler.ast.IR.{ClassIR, CompilationUnitIR, MethodIR}
+import compiler.ast.IR.{ClassIR, CompilationUnitIR, MethodIR}
 
 
 object CodeGen {

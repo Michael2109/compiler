@@ -1,8 +1,8 @@
-package transpiler.parser
+package compiler.parser
 
 import fastparse._
 import LexicalParser.keyword
-import transpiler.ast.AST
+import compiler.ast.AST
 
 import fastparse._
 import ExpressionParser.{whitespace => _, _}

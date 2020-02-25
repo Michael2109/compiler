@@ -1,10 +1,10 @@
-package transpiler.compiler
+package compiler.compiler
 
 import java.nio.file.{Path, Paths}
 
 import fastparse._
-import transpiler.ast.AST
-import transpiler.parser.StatementParser
+import compiler.ast.AST
+import compiler.parser.StatementParser
 
 import scala.io.Source
 

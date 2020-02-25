@@ -1,9 +1,9 @@
-package transpiler.parser
+package compiler.parser
 
 import fastparse.NoWhitespace._
 import fastparse._
-import transpiler.ast.AST
-import transpiler.ast.AST._
+import compiler.ast.AST
+import compiler.ast.AST._
 
 import scala.collection.mutable
 import scala.language.implicitConversions

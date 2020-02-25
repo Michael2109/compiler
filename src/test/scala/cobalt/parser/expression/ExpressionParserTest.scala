@@ -3,7 +3,7 @@ package cobalt.parser.expression
 import cobalt.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import transpiler.parser.ExpressionParser
+import compiler.parser.ExpressionParser
 
 
 class ExpressionParserTest extends AnyFunSpec with Matchers {

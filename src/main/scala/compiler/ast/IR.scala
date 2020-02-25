@@ -1,5 +1,5 @@
 
-package transpiler.ast
+package compiler.ast
 
 object IR {
 

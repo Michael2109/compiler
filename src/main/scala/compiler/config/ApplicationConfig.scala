@@ -1,4 +1,4 @@
-package transpiler.config
+package compiler.config
 
 object ApplicationConfig {
 

@@ -1,4 +1,4 @@
-package transpiler.symbol_table
+package compiler.symbol_table
 
 
 import scala.collection.mutable.ListBuffer

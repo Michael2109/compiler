@@ -3,8 +3,8 @@ package cobalt.parser.statement
 import cobalt.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
-import transpiler.ast.AST.identifier
-import transpiler.parser.StatementParser
+import compiler.ast.AST.identifier
+import compiler.parser.StatementParser
 
 class StatementParserTest extends AnyFunSpec with Matchers {
    describe("Statement parser") {

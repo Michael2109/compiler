@@ -1,4 +1,4 @@
-package transpiler.compiler
+package compiler.compiler
 
 import java.nio.file.{Path, Paths}
 
