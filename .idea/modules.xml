@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/compiler.iml" filepath="$PROJECT_DIR$/.idea/modules/compiler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javascript-transpiler-build.iml" filepath="$PROJECT_DIR$/.idea/modules/javascript-transpiler-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/compiler-build.iml" filepath="$PROJECT_DIR$/.idea/modules/compiler-build.iml" />
     </modules>
   </component>
 </project>

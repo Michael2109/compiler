@@ -1,4 +1,4 @@
-name := "javascript-transpiler"
+name := "compiler"
 
 version := "0.1"
 
