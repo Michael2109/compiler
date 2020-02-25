@@ -1,4 +1,4 @@
-package compiler.code_gen
+package compiler.codegen
 
 import java.io.PrintWriter
 

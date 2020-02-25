@@ -1,4 +1,4 @@
-package cobalt.utils
+package compiler.utils
 
 import java.io.File
 import java.nio.file.{Path, Paths}
@@ -29,14 +29,14 @@ object CompilerUtil {
 
   def compileFile(classPath: Path, outputDir: Path, filePath: Path): Unit = {
     outputDir.resolve(filePath).getParent.toFile.mkdirs
-    CompilerExecutor.main(Array("-cp", classPath.toString, "-d", outputDir.toString, filePath.toString + ".cobalt"))
+    CompilerExecutor.main(Array("-cp", classPath.toString, "-d", outputDir.toString, filePath.toString + ".compiler"))
   }
 
-  //compileDirectory(Paths.get("src\\test\\resources\\cobalt"), Paths.get("cobalt_generated"), Paths.get(""))
+  //compileDirectory(Paths.get("src\\test\\resources\\compiler"), Paths.get("cobalt_generated"), Paths.get(""))
 
   def executeJava(fileName: Path): Array[String] = {
-    compileFile(Paths.get("src/test/resources/cobalt"), Paths.get("cobalt_generated"), fileName)
-    compileFile(Paths.get("src/test/resources/cobalt"), Paths.get("cobalt_generated"), fileName)
+    compileFile(Paths.get("src/test/resources/compiler"), Paths.get("cobalt_generated"), fileName)
+    compileFile(Paths.get("src/test/resources/compiler"), Paths.get("cobalt_generated"), fileName)
 
     val result: String = (("java -cp " + Paths.get("cobalt_generated").toString + " " + fileName.toString.replace("\\", ".")) !!)
     result.split("\r\n")

@@ -1,4 +1,4 @@
-package cobalt;
+package compiler;
 
 import java.util.List;
 import java.util.stream.Collectors;

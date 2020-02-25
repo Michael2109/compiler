@@ -1,6 +1,6 @@
-package cobalt.parser.expression
+package compiler.parser.expression
 
-import cobalt.utils.TestUtil
+import compiler.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import compiler.parser.ExpressionParser

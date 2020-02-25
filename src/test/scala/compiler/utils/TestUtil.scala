@@ -1,4 +1,4 @@
-package cobalt.utils
+package compiler.utils
 
 import fastparse.{P, Parsed}
 

@@ -1,6 +1,6 @@
-package cobalt.parser.statement
+package compiler.parser.statement
 
-import cobalt.utils.TestUtil
+import compiler.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import compiler.ast.AST.identifier
