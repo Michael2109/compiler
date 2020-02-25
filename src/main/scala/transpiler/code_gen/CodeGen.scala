@@ -2,7 +2,11 @@ package transpiler.code_gen
 
 import java.io.PrintWriter
 
-import transpiler.ast.IR.CompilationUnitIR
+import javassist.{ClassPool, CtNewMethod}
+import javassist.bytecode.{ClassFile, MethodInfo}
+import jdk.internal.org.objectweb.asm.util.CheckClassAdapter
+import jdk.internal.org.objectweb.asm.{ClassReader, ClassWriter, Opcodes}
+import transpiler.ast.IR.{ClassIR, CompilationUnitIR, MethodIR}
 
 
 object CodeGen {
@@ -10,8 +14,27 @@ object CodeGen {
   val version = 49
 
 
-  def genCompilationUnitIRCode(compilationUnitIR: CompilationUnitIR): Unit ={
+  def genCompilationUnitIRCode(compilationUnitIR: CompilationUnitIR): List[Array[Byte]] ={
 
+  }
+
+  def genClassIRCode(classIR: ClassIR): Array[Byte] ={
+
+    val classPool = ClassPool.getDefault
+
+    val classFile = new ClassFile(false, classIR.identifier, null)
+
+    classPool.makeClass(classFile).toBytecode
+
+  }
+
+  def genMethodIRCode(classFile: ClassFile, methodIR: MethodIR): Unit ={
+    //int modifiers, CtClass returnType,
+    //                                String mname, CtClass[] parameters,
+    //                                CtClass[] exceptions,
+    //                                String body, CtClass declaring
+    val method = CtNewMethod.make()
+    classFile.addMethod()
   }
 
 /*

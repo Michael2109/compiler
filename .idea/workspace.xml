@@ -236,6 +236,7 @@
     </option>
     <option name="modificationStamps">
       <map>
+        <entry key="$PROJECT_DIR$" value="3165270906568" />
         <entry key="$PROJECT_DIR$/build.sbt" value="3938435243" />
         <entry key="$PROJECT_DIR$/project/build.properties" value="1244562550" />
       </map>
@@ -279,7 +280,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582639488006</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added code gen.">
+      <created>1582639787737</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1582639787737</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -298,10 +306,10 @@
     </state>
     <state x="758" y="337" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582639760327" />
     <state x="1010" y="454" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582475285710" />
-    <state x="686" y="218" key="CommitChangelistDialog2" timestamp="1582639486751">
+    <state x="686" y="218" key="CommitChangelistDialog2" timestamp="1582639786928">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="686" y="218" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582639486751" />
+    <state x="686" y="218" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582639786928" />
     <state x="915" y="294" key="CommitChangelistDialog2/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582502719522" />
     <state x="761" y="342" key="FileChooserDialogImpl" timestamp="1582632259268">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -327,10 +335,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582632265425" />
-    <state x="654" y="321" key="Vcs.Push.Dialog.v2" timestamp="1582639489236">
+    <state x="654" y="321" key="Vcs.Push.Dialog.v2" timestamp="1582639788840">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="654" y="321" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582639489236" />
+    <state x="654" y="321" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582639788840" />
     <state x="872" y="432" key="Vcs.Push.Dialog.v2/0.0.2560.1400/2560.349.1920.1040@0.0.2560.1400" timestamp="1582502736868" />
     <state x="976" y="523" key="com.intellij.ide.util.TipDialog" timestamp="1582575226324">
       <screen x="0" y="0" width="2560" height="1400" />
