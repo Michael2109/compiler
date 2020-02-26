@@ -1,6 +1,5 @@
 package compiler.parser
 
-import fastparse.NoWhitespace._
 import fastparse._
 import compiler.ast.AST
 import compiler.ast.AST._
@@ -13,20 +12,21 @@ import fastparse._
 object ExpressionParser {
 
   implicit def whitespace(cfg: P[_]): P[Unit] = LexicalParser.wscomment(cfg)
+
   def accessModifier[_: P]: P[Modifier] = P(LexicalParser.kw("protected")).map(_ => Protected()) | P(LexicalParser.kw("private")).map(_ => Private()) | P(LexicalParser.kw("local")).map(_ => PackageLocal())
 
   def annotationParser[_: P]: P[Annotation] = P("@" ~ nameParser).map(Annotation)
 
-  def parensParser[_: P]: P[Expression] = P( "(" ~ (expressionParser) ~ ")" )
-  def termParser[_: P]: P[Expression] = P(Chain(allExpressionsParser, multiply | divide ))
-  def arith_exprParser[_: P]: P[Expression] = P(Chain(termParser, add | subtract))
-  def rExprParser[_: P]: P[Expression] = P(Chain(arith_exprParser, LtE | Lt | GtE | Gt))
+  def parenthesisParser[_: P]: P[Expression] = P( "(" ~ (expressionParser) ~ ")" )
+  def termParser[_: P]: P[Expression] = P(Chain(simpleExpressionParser, multiply | divide ))
+  def arithmeticExpressionParser[_: P]: P[Expression] = P(Chain(termParser, add | subtract))
+  def relationalExpressionParser[_: P]: P[Expression] = P(Chain(arithmeticExpressionParser, LtE | Lt | GtE | Gt))
 
-  def allExpressionsParser[_: P]: P[Expression] = methodCallParser | newClassInstanceParser | ternaryParser | numberParser | identifierParser | stringLiteral | parensParser
+  def simpleExpressionParser[_: P]: P[Expression] = methodCallParser | newClassInstanceParser | ternaryParser | numberParser | identifierParser | stringLiteral | parenthesisParser
 
   def expressionParser[_: P]: P[Expression] = {
 
-    P(Chain(rExprParser, and | or)).rep(sep = ".", min = 1 ).map(expressions => {
+    P(Chain(relationalExpressionParser, and | or)).rep(sep = ".", min = 1 ).map(expressions => {
       expressions.length match {
         case 1 => expressions.head
         case _ => NestedExpr(expressions)

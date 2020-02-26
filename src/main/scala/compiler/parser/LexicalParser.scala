@@ -10,8 +10,8 @@ object LexicalParser {
 
   def kw[_: P](s: String) = s ~ !(letter | digit | "_")
 
-  def comment[_: P] = P("#" ~ CharsWhile(_ != '\n', 0))
-  def wscomment[_: P] = P((CharsWhileIn(" \n") | LexicalParser.comment | "\\\n").rep)
+  def comment[_: P] = P( "#" ~ CharsWhile(_ != '\n', 0) )
+  def wscomment[_: P] = P( (CharsWhileIn(" \n") | LexicalParser.comment | "\\\n").rep )
   def nonewlinewscomment[_: P] = P((CharsWhileIn(" ") | LexicalParser.comment | "\\\n").rep)
 
   def identifier[_: P]: P[String] =

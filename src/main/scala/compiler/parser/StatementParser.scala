@@ -1,6 +1,8 @@
 package compiler.parser
 
+import compiler.ast.AST._
 import compiler.parser.ExpressionParser.{whitespace => _}
+import fastparse._
 
 object StatementParser extends Statements(0)
 
@@ -11,70 +13,74 @@ object StatementParser extends Statements(0)
  * Manually transcribed from https://docs.python.org/2/reference/grammar.html
  */
 class Statements(indent: Int) {
-  /*
-    implicit def whitespace(cfg: P[_]): P[Unit] = LexicalParser.wscomment(cfg)
 
-    def space[_: P] = P(CharIn(" \n"))
+  implicit def whitespace(cfg: P[_]): P[Unit] = LexicalParser.wscomment(cfg)
 
-    def NEWLINE[_: P]: P0 = P("\n" | End)
+  def space[_: P] = P(CharIn(" \n"))
 
-    def ENDMARKER[_: P]: P0 = P(End)
+  def NEWLINE[_: P]: P0 = P("\n" | End)
 
-    def indents[_: P] = P("\n" ~~ " ".repX(indent))
+  def ENDMARKER[_: P]: P0 = P(End)
 
-    def spaces[_: P] = P((LexicalParser.nonewlinewscomment.? ~~ "\n").repX(1))
+  def indents[_: P] = P("\n" ~~ " ".repX(indent))
 
-    def assignParser[_: P]: P[Assign] = P(LexicalParser.kw("let") ~ ("mutable").!.? ~ ExpressionParser.nameParser ~ (":" ~ ExpressionParser.typeRefParser).? ~/ P(LexicalParser.kw("=")) ~ blockParser).map(x => Assign(x._2, x._3, x._1.isEmpty, x._4))
+  def spaces[_: P] = P((LexicalParser.nonewlinewscomment.? ~~ "\n").repX(1))
 
-    def blockParser: P[Block] = P(doBlock | ExpressionParser.expressionParser.map(Inline))
+  def assignParser[_: P]: P[Assign] = P(LexicalParser.kw("let") ~ ("mutable").!.? ~ ExpressionParser.nameParser ~ (":" ~ ExpressionParser.typeRefParser).? ~/ P(LexicalParser.kw("=")) ~ blockParser).map(x => Assign(x._2, x._3, x._1.isEmpty, x._4))
 
-    def commentParser: P[_] = P(LexicalParser.comment)
+  def blockParser[_: P]: P[Block] = P(doBlock | ExpressionParser.expressionParser.map(Inline))
 
-    def doBlock: P[Block] = P(LexicalParser.kw("do") ~~ indentedBlock).map(x => DoBlock(x))
+  def commentParser[_: P]: P[_] = P(LexicalParser.comment)
 
-    def exprAsStmt: P[Statement] = P(ExpressionParser.expressionParser).map(ExprAsStmt)
+  def doBlock[_: P]: P[Block] = P(LexicalParser.kw("do") ~~ indentedBlock).map(x => DoBlock(x))
 
-    def ifStatementParser: P[If] = {
-      def ifParser: P[(Expression, Statement)] = P(LexicalParser.kw("if") ~/ ExpressionParser.expressionParser ~ P(LexicalParser.kw("then")) ~ blockParser).map(x => (x._1, x._2))
-      def elseParser: P[Statement] = P(elifP ~ elseParser.?).map(x => If(x._1, x._2, x._3)) | P(elseP)
+  def exprAsStmt[_: P]: P[Statement] = P(ExpressionParser.expressionParser).map(ExprAsStmt)
 
-      def elifP: P[(Expression, Statement)] = P(LexicalParser.kw("elif") ~/ ExpressionParser.expressionParser ~ LexicalParser.kw("then") ~ blockParser).map(x => (x._1, x._2))
-      def elseP: P[Statement] = P(LexicalParser.kw("else") ~/ blockParser).map(x => x)
+  def ifParser[_: P]: P[(Expression, Statement)] = P(LexicalParser.kw("if") ~/ ExpressionParser.expressionParser ~ P(LexicalParser.kw("then")) ~ blockParser).map(x => (x._1, x._2))
 
-      P(ifParser ~ elseParser.?).map(x => If(x._1, x._2, x._3))
-    }
+  def elseParser[_: P]: P[Statement] = P(elifP ~ elseParser.?).map(x => If(x._1, x._2, x._3)) | P(elseP)
 
-    def importParser: P[Import] = P(LexicalParser.kw("import") ~/ ExpressionParser.nameParser.rep(sep=".")).map(Import)
+  def elifP[_: P]: P[(Expression, Statement)] = P(LexicalParser.kw("elif") ~/ ExpressionParser.expressionParser ~ LexicalParser.kw("then") ~ blockParser).map(x => (x._1, x._2))
 
-    def fieldParser: P[Field] = P(ExpressionParser.nameParser ~ ":" ~ ExpressionParser.typeRefParser).map(x => Field(x._1, x._2, None))
+  def elseP[_: P]: P[Statement] = P(LexicalParser.kw("else") ~/ blockParser).map(x => x)
 
-    def methodParser: P[Statement] = P(ExpressionParser.modifiers ~ LexicalParser.kw("let") ~ ExpressionParser.nameParser ~ "(" ~/ fieldParser.rep(sep = ",") ~ ")" ~ (":" ~ ExpressionParser.typeRefParser).? ~ "=" ~ blockParser).map(x => Method(x._2, Seq(), x._3, x._1, x._4, x._5))
+  def ifStatementParser[_: P]: P[If] = {
 
-    def modelParser: P[Model] = P(LexicalParser.kw("class") ~/ ExpressionParser.nameParser ~ ("extends" ~ ExpressionParser.typeRefParser).? ~ (LexicalParser.kw("with") ~ ExpressionParser.typeRefParser).rep() ~~ indentedBlock).map(x => ClassModel(x._1, Seq(), Seq(), x._2, Seq(), x._3, x._4))
+    P(ifParser ~ elseParser.?).map(x => If(x._1, x._2, x._3))
+  }
 
-    def moduleParser: P[Module] = P(nameSpaceParser ~ importParser.rep ~ modelParser.rep).map(x => Module(ModuleHeader(x._1, x._2), x._3))
+  def importParser[_: P]: P[Import] = P(LexicalParser.kw("import") ~/ ExpressionParser.nameParser.rep(sep = ".")).map(Import)
 
-    def nameSpaceParser: P[NameSpace] = P(LexicalParser.kw("package") ~/ ExpressionParser.nameParser.rep(sep=".")).map(NameSpace)
+  def fieldParser[_: P]: P[Field] = P(ExpressionParser.nameParser ~ ":" ~ ExpressionParser.typeRefParser).map(x => Field(x._1, x._2, None))
 
-    def reassignParser: P[Reassign] = P(ExpressionParser.nameParser ~ "<-" ~/ blockParser).map(x => Reassign(x._1, x._2))
+  def methodParser[_: P]: P[Statement] = P(ExpressionParser.modifiers ~ LexicalParser.kw("let") ~ ExpressionParser.nameParser ~ "(" ~/ fieldParser.rep(sep = ",") ~ ")" ~ (":" ~ ExpressionParser.typeRefParser).? ~ "=" ~ blockParser).map(x => Method(x._2, Seq(), x._3, x._1, x._4, x._5))
 
-    def statementParser: P[Statement] = P(!commentParser ~ (modelParser | ifStatementParser | methodParser | assignParser | reassignParser | exprAsStmt))
+  def modelParser[_: P]: P[Model] = P(LexicalParser.kw("class") ~/ ExpressionParser.nameParser ~ ("extends" ~ ExpressionParser.typeRefParser).? ~ (LexicalParser.kw("with") ~ ExpressionParser.typeRefParser).rep() ~~ indentedBlock).map(x => ClassModel(x._1, Seq(), Seq(), x._2, Seq(), x._3, x._4))
 
-    def suite[_: P]: P[Seq[AST.stmt]] = {
-      def deeper: P[Int] = {
-        def commentLine = P("\n" ~~ LexicalParser.nonewlinewscomment.?.map(_ => 0)).map((_, Some("")))
+  def moduleParser[_: P]: P[Module] = P(nameSpaceParser ~ importParser.rep ~ modelParser.rep).map(x => Module(ModuleHeader(x._1, x._2), x._3))
 
-        def endLine = P("\n" ~~ (" " | "\t").repX(indent + 1).!.map(_.length) ~~ LexicalParser.comment.!.?)
+  def nameSpaceParser[_: P]: P[NameSpace] = P(LexicalParser.kw("package") ~/ ExpressionParser.nameParser.rep(sep = ".")).map(NameSpace)
 
-        P(LexicalParser.nonewlinewscomment.? ~~ (endLine | commentLine).repX(1)).map {
-          _.collectFirst { case (s, None) => s }
-        }.filter(_.isDefined).map(_.get)
-      }
+  def reassignParser[_: P]: P[Reassign] = P(ExpressionParser.nameParser ~ "<-" ~/ blockParser).map(x => Reassign(x._1, x._2))
 
-      def indented = P(deeper.flatMapX { nextIndent =>
-        new Statements(nextIndent).stmt.repX(1, spaces.repX(1) ~~ (" " * nextIndent | "\t" * nextIndent)).map(_.flatten)
-      })
+  def statementParser[_: P]: P[Statement] = P(!commentParser ~ (modelParser | ifStatementParser | methodParser | assignParser | reassignParser | exprAsStmt))
 
-      P(indented | " ".rep ~ simple_stmt)
-    }*/
+  def commentLine[_: P] = P("\n" ~~ LexicalParser.nonewlinewscomment.?.map(_ => 0)).map((_, Some("")))
+
+  def endLine[_: P] = P("\n" ~~ (" " | "\t").repX(indent + 1).!.map(_.length) ~~ LexicalParser.comment.!.?)
+
+  def deeper[_: P]: P[Int] = {
+    P(LexicalParser.nonewlinewscomment.? ~~ (endLine | commentLine).repX(1)).map {
+      _.collectFirst { case (s, None) => s }
+    }.filter(_.isDefined).map(_.get)
+  }
+
+  def indented[_: P]: P[Seq[Statement]] = P(deeper.flatMap { nextIndent =>
+    new Statements(nextIndent).statementParser.repX(1, spaces.repX(1) ~~ (" " * nextIndent | "\t" * nextIndent)).map(x => x)
+  })
+
+  def indentedBlock[_: P]: P[Seq[Statement]] = {
+
+    (indented | (" ".rep ~ statementParser.rep(min = 1, max = 1)))
+  }
 }
