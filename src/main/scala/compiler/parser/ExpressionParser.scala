@@ -22,13 +22,12 @@ object ExpressionParser {
   def arith_exprParser[_: P]: P[Expression] = P(Chain(termParser, add | subtract))
   def rExprParser[_: P]: P[Expression] = P(Chain(arith_exprParser, LtE | Lt | GtE | Gt))
 
-  def allExpressionsParser[_: P] = methodCallParser | newClassInstanceParser | ternaryParser | numberParser | identifierParser | stringLiteral | parensParser
+  def allExpressionsParser[_: P]: P[Expression] = methodCallParser | newClassInstanceParser | ternaryParser | numberParser | identifierParser | stringLiteral | parensParser
 
   def expressionParser[_: P]: P[Expression] = {
 
-    P(Chain(rExprParser, and | or)).rep(sep = ".").map(expressions => {
+    P(Chain(rExprParser, and | or)).rep(sep = ".", min = 1 ).map(expressions => {
       expressions.length match {
-        case 0 => BlockExpr(Seq())
         case 1 => expressions.head
         case _ => NestedExpr(expressions)
       }
@@ -59,10 +58,10 @@ object ExpressionParser {
 
   def refParser[_: P]: P[Ref] = P(nameParser.rep(sep = ".", min=2)).map(x => RefQual(QualName(NameSpace(x.dropRight(1)), x.last))) | P(nameParser).map(RefLocal)
 
-  private def Chain[_: P](p: P[Expression], op: P[AST.Operator]) = P(p ~ (op ~ p).rep).map {
+  def Chain[_: P](p: => P[Expression], op: => P[Operator]): P[Expression] = P( p ~ (op ~ p).rep ).map{
     case (lhs, chunks) =>
-      chunks.foldLeft(lhs) { case (lhs, (operator, rhs)) =>
-        operator match {
+      chunks.foldLeft(lhs){case (lhs, (op, rhs)) =>
+        op match {
           case op: ABinOp => new ABinary(op, lhs, rhs)
           case op: BBinOp => new BBinary(op, lhs, rhs)
           case op: RBinOp => new RBinary(op, lhs, rhs)
@@ -71,16 +70,16 @@ object ExpressionParser {
   }
 
   def op[T, _: P](s: => P[Unit], rhs: T) = s.!.map(_ => rhs)
-  def Lt[_: P] = op("<", AST.Less)
-  def Gt[_: P] = op(">", AST.Greater.asInstanceOf[Operator])
-  def Eq[_: P] = op("==", AST.Equal.asInstanceOf[Operator])
-  def GtE[_: P] = op(">=", AST.GreaterEqual.asInstanceOf[Operator])
-  def LtE[_: P] = op("<=", AST.LessEqual.asInstanceOf[Operator])
-  def comp_op[_: P] = P(LtE | GtE | Eq | Gt | Lt)
-  def add[_: P] = op("+", AST.Add.asInstanceOf[Operator])
-  def subtract[_: P] = op("-", AST.Subtract.asInstanceOf[Operator])
-  def multiply [_: P]= op("*", AST.Multiply.asInstanceOf[Operator])
-  def divide[_: P] = op("/", AST.Divide.asInstanceOf[Operator])
-  def and[_: P] = op("&&", AST.And.asInstanceOf[Operator])
-  def or[_: P] = op("||", AST.Or.asInstanceOf[Operator])
+  def Lt[_: P]: P[Operator] = op("<", AST.Less)
+  def Gt[_: P]: P[Operator] = op(">", AST.Greater)
+  def Eq[_: P]: P[Operator] = op("==", AST.Equal)
+  def GtE[_: P]: P[Operator] = op(">=", AST.GreaterEqual)
+  def LtE[_: P]: P[Operator] = op("<=", AST.LessEqual)
+  def comp_op[_: P]: P[Operator] = P(LtE | GtE | Eq | Gt | Lt)
+  def add[_: P]: P[Operator] = op("+", AST.Add)
+  def subtract[_: P]: P[Operator] = op("-", AST.Subtract)
+  def multiply [_: P]: P[Operator] = op("*", AST.Multiply)
+  def divide[_: P]: P[Operator] = op("/", AST.Divide)
+  def and[_: P]: P[Operator] = op("&&", AST.And)
+  def or[_: P]: P[Operator] = op("||", AST.Or)
 }
