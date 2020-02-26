@@ -18,7 +18,7 @@ object Compiler {
 
     // Parse them
     val asts = cobaltFiles.map(cobaltFile => {
-      parse(cobaltFile.replace("\r", ""), StatementParser.file_input(_))
+      //parse(cobaltFile.replace("\r", ""), StatementParser.file_input(_))
     })
 /*
 

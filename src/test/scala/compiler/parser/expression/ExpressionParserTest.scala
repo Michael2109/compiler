@@ -1,5 +1,6 @@
 package compiler.parser.expression
 
+import compiler.ast.AST.IntConst
 import compiler.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
@@ -10,7 +11,7 @@ class ExpressionParserTest extends AnyFunSpec with Matchers {
   describe("Nested expression call parser test") {
     it("Should parse nested expression calls") {
 
-     // TestUtil.parse("x.toString()", ExpressionParser.expressionParser(_)) shouldBe NestedExpr(List(Identifier(Name("x")), MethodCall(Name("toString"), List(BlockExpr(List[Expression]())))))
+      TestUtil.parse("1", ExpressionParser.allExpressionsParser(_)) shouldBe IntConst(1)
     }
   }
 }
