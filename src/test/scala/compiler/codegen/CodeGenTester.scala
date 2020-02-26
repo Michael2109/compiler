@@ -5,13 +5,25 @@ import java.nio.file.Paths
 import compiler.ast.AST._
 import compiler.ast2ir.AST2IR
 import compiler.ir.IR._
+import compiler.parser.StatementParser
+import compiler.utils.TestUtil
 import javassist.bytecode.MethodInfo
 
 object CodeGenTester {
 
   def main(args: Array[String]): Unit = {
 
-    val module = Module(ModuleHeader(NameSpace(List(Name("x"), Name("y"), Name("z"))),List()),List(ClassModel(Name("ClassName"),List(),List(),None,List(),List(),List(Method(Name("methodName"),List(),List(),List(),None,DoBlock(List(Assign(Name("x"),None,true,Inline(IntConst(10))))))))))
+    val code =
+      """package x.y.z
+        |class ClassName
+        |    let methodName() = do
+        |        let x = (10 + 20 - 30) / 50 * 70
+        |
+        |        let y = 100 - 50
+        |
+        |        let z = 2000 / 405 + 20
+            """.stripMargin.replace("\r", "")
+    val module = TestUtil.parse(code, StatementParser.moduleParser(_)).asInstanceOf[Module]
 
     val compilationUnitIR = AST2IR.moduleToIR(module)
 

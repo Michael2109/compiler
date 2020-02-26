@@ -30,10 +30,13 @@ object IR {
 
   case class MaxLocals(value: Int) extends InstructionIR
 
-  case object IStore0 extends InstructionIR
+  case class IStore(id: Int) extends InstructionIR
 
   case class IConst0(value: Int) extends InstructionIR
 
   case object IAdd extends InstructionIR
+  case object ISubtract extends InstructionIR
+  case object IMultiply extends InstructionIR
+  case object IDivide extends InstructionIR
 
 }
