@@ -1,7 +1,7 @@
 package compiler.parser.expression
 
 import compiler.ast.AST
-import compiler.ast.AST.{ABinary, IntConst}
+import compiler.ast.AST.{ABinary, Add, IntConst}
 import compiler.utils.TestUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
