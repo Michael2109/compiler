@@ -2,11 +2,12 @@ package compiler.codegen
 
 import java.io.PrintWriter
 
+import compiler.codegen.CodeGen.genInstructionCode
 import javassist.{ClassPool, CtNewMethod}
 import javassist.bytecode.{Bytecode, ClassFile, MethodInfo}
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter
 import jdk.internal.org.objectweb.asm.{ClassReader, ClassWriter, Opcodes}
-import compiler.ast.IR.{ALoad, ClassIR, CompilationUnitIR, InstructionIR, InvokeSpecial, MaxLocals, MethodIR, Return}
+import compiler.ir.IR.{ALoad, ClassIR, CompilationUnitIR, IConst0, IStore0, InstructionIR, InvokeSpecial, MaxLocals, MethodIR, ReturnIR}
 
 
 object CodeGen {
@@ -22,7 +23,7 @@ null
 
     val classPool = ClassPool.getDefault
 
-    val classFile = new ClassFile(false, classIR.identifier, null)
+    val classFile = new ClassFile(false, classIR.name, null)
 
     classIR.methods.foreach(method => genMethodIRCode(classFile, method))
 
@@ -34,7 +35,7 @@ null
     val bytecode = new Bytecode(classFile.getConstPool)
 
     methodIR.instructions.foreach(instruction => {
-      genInstructionCode(bytecode, instruction)
+      genInstructionCode1(bytecode, instruction)
     })
 
     val methodInfo = new MethodInfo(classFile.getConstPool,methodIR.identifier, "()" + methodIR.`type`)
@@ -43,24 +44,35 @@ null
     classFile.addMethod(methodInfo)
   }
 
-  def genInstructionCode(bytecode: Bytecode, instruction: InstructionIR): Unit ={
+  def genInstructionCode1(bytecode: Bytecode, instruction: InstructionIR): Unit ={
     instruction match {
       case aLoad: ALoad => genInstructionCode(bytecode, aLoad)
+      case iConst0: IConst0 => genInstructionCode(bytecode, iConst0)
+      case IStore0 => genInstructionCode(bytecode, IStore0)
       case invokeSpecial: InvokeSpecial => genInstructionCode(bytecode, invokeSpecial)
-      case `return`: Return => genInstructionCode(bytecode, `return`)
+      case `return`: ReturnIR => genInstructionCode(bytecode, `return`)
       case maxLocals: MaxLocals => genInstructionCode(bytecode, maxLocals)
     }
   }
 
-  def genInstructionCode(bytecode: Bytecode, instruction: ALoad): Unit ={
-    bytecode.addAload(instruction.value)
+  def genInstructionCode(bytecode: Bytecode, aLoad: ALoad): Unit ={
+    bytecode.addAload(aLoad.value)
+  }
+
+  def genInstructionCode(bytecode: Bytecode, iConst0: IConst0): Unit ={
+    bytecode.addIconst(iConst0.value)
+  }
+
+
+  def genInstructionCode(bytecode: Bytecode, iStore0: IStore0.type): Unit ={
+    bytecode.addIstore(1)
   }
 
   def genInstructionCode(bytecode: Bytecode, instruction: InvokeSpecial): Unit ={
     bytecode.addInvokespecial(instruction.clazz, instruction.methodName, instruction.description)
   }
 
-  def genInstructionCode(bytecode: Bytecode, instruction: Return): Unit ={
+  def genInstructionCode(bytecode: Bytecode, instruction: ReturnIR): Unit ={
     bytecode.addReturn(null)
   }
 
@@ -114,7 +126,7 @@ null
            0
          })
        case blockStmt: BlockExprIR => blockStmt.expressions.foreach(x => genCode(mv, x))*/
-      case identifier: IdentifierIR => mv.visitIntInsn(IRUtils.getLoadOperator(identifier.`type`), identifier.id)
+      case name: IdentifierIR => mv.visitIntInsn(IRUtils.getLoadOperator(name.`type`), name.id)
       case doubleConst: DoubleConstIR => mv.visitLdcInsn(doubleConst.value.toDouble)
       case floatConst: FloatConstIR => mv.visitLdcInsn(floatConst.value.toFloat)
       case intConst: IntConstIR => mv.visitIntInsn(Opcodes.BIPUSH, intConst.value.toInt)

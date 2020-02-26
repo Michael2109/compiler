@@ -1,11 +1,10 @@
-
-package compiler.ast
+package compiler.ir
 
 object IR {
 
-  case class CompilationUnitIR(classes: List[ClassIR])
+  case class CompilationUnitIR(classes: Seq[ClassIR])
 
-  case class ClassIR(modifiers: List[ModifierIR], identifier: String, extendedBy: String, interfaces: List[String], fields: List[FieldIR], methods: List[MethodIR])
+  case class ClassIR(modifiers: List[ModifierIR], name: String, extendedBy: Option[String], interfaces: List[String], fields: List[FieldIR], methods: Seq[MethodIR])
 
   trait ModifierIR
 
@@ -21,16 +20,20 @@ object IR {
 
   case class ParameterIR(modifiers: List[ModifierIR], identifier: String, `type`: String)
 
-  case class InstructionsIR(instructions: List[InstructionIR])
-
   trait InstructionIR
 
   case class ALoad(value: Int) extends InstructionIR
 
   case class InvokeSpecial(clazz: String, methodName: String, description: String) extends InstructionIR
 
-  case class Return() extends InstructionIR
+  case class ReturnIR() extends InstructionIR
 
   case class MaxLocals(value: Int) extends InstructionIR
+
+  case object IStore0 extends InstructionIR
+
+  case class IConst0(value: Int) extends InstructionIR
+
+  case object IAdd extends InstructionIR
 
 }
