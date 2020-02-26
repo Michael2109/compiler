@@ -10,7 +10,9 @@ object IR {
   trait ModifierIR
 
   case object PublicIR extends ModifierIR
+
   case object ProtectedIR extends ModifierIR
+
   case object PrivateIR extends ModifierIR
 
   case class FieldIR(modifiers: List[ModifierIR], identifier: String, `type`: String)
@@ -22,4 +24,13 @@ object IR {
   case class InstructionsIR(instructions: List[InstructionIR])
 
   trait InstructionIR
+
+  case class ALoad(value: Int) extends InstructionIR
+
+  case class InvokeSpecial(clazz: String, methodName: String, description: String) extends InstructionIR
+
+  case class Return() extends InstructionIR
+
+  case class MaxLocals(value: Int) extends InstructionIR
+
 }

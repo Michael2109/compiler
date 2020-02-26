@@ -6,7 +6,7 @@ import javassist.{ClassPool, CtNewMethod}
 import javassist.bytecode.{Bytecode, ClassFile, MethodInfo}
 import jdk.internal.org.objectweb.asm.util.CheckClassAdapter
 import jdk.internal.org.objectweb.asm.{ClassReader, ClassWriter, Opcodes}
-import compiler.ast.IR.{ClassIR, CompilationUnitIR, MethodIR}
+import compiler.ast.IR.{ALoad, ClassIR, CompilationUnitIR, InstructionIR, InvokeSpecial, MaxLocals, MethodIR, Return}
 
 
 object CodeGen {
@@ -31,24 +31,41 @@ null
 
   def genMethodIRCode(classFile: ClassFile, methodIR: MethodIR): Unit ={
 
-    val code = new Bytecode(classFile.getConstPool)
+    val bytecode = new Bytecode(classFile.getConstPool)
 
-    if(methodIR.identifier.equals(MethodInfo.nameInit)) {
-      code.addAload(0)
-      code.addInvokespecial("java/lang/Object", MethodInfo.nameInit, "()V")
-      code.addReturn(null)
-      code.setMaxLocals(1)
-    }
-
-    if(methodIR.`type`.equals("V"))
-    {
-      code.addReturn(null)
-    }
+    methodIR.instructions.foreach(instruction => {
+      genInstructionCode(bytecode, instruction)
+    })
 
     val methodInfo = new MethodInfo(classFile.getConstPool,methodIR.identifier, "()" + methodIR.`type`)
-    methodInfo.setCodeAttribute(code.toCodeAttribute)
+    methodInfo.setCodeAttribute(bytecode.toCodeAttribute)
 
     classFile.addMethod(methodInfo)
+  }
+
+  def genInstructionCode(bytecode: Bytecode, instruction: InstructionIR): Unit ={
+    instruction match {
+      case aLoad: ALoad => genInstructionCode(bytecode, aLoad)
+      case invokeSpecial: InvokeSpecial => genInstructionCode(bytecode, invokeSpecial)
+      case `return`: Return => genInstructionCode(bytecode, `return`)
+      case maxLocals: MaxLocals => genInstructionCode(bytecode, maxLocals)
+    }
+  }
+
+  def genInstructionCode(bytecode: Bytecode, instruction: ALoad): Unit ={
+    bytecode.addAload(instruction.value)
+  }
+
+  def genInstructionCode(bytecode: Bytecode, instruction: InvokeSpecial): Unit ={
+    bytecode.addInvokespecial(instruction.clazz, instruction.methodName, instruction.description)
+  }
+
+  def genInstructionCode(bytecode: Bytecode, instruction: Return): Unit ={
+    bytecode.addReturn(null)
+  }
+
+  def genInstructionCode(bytecode: Bytecode, instruction: MaxLocals): Unit ={
+    bytecode.setMaxLocals(instruction.value)
   }
 
 /*
