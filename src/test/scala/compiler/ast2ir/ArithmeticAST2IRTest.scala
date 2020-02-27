@@ -25,5 +25,9 @@ class ArithmeticAST2IRTest  extends AnyFunSpec with Matchers{
       val ir = AST2IR.expressionToIR(ABinary(Divide, IntConst(14), IntConst(105)))
       ir shouldBe List(IConst0(14), IConst0(105), IDivide)
     }
+    it("Should convert multiple arithmetic operations") {
+      val ir = AST2IR.expressionToIR(ABinary(Add, IntConst(50), ABinary(Divide, IntConst(14), IntConst(105))))
+      ir shouldBe List(IConst0(50), IConst0(14), IConst0(105), IDivide, IAdd)
+    }
   }
 }

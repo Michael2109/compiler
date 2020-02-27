@@ -6,6 +6,7 @@ import compiler.ast.AST._
 import compiler.ast2ir.AST2IR
 import compiler.ir.IR._
 import compiler.parser.StatementParser
+import compiler.symbol_table.SymbolTableCreator
 import compiler.utils.TestUtil
 import javassist.bytecode.MethodInfo
 
@@ -24,6 +25,8 @@ object CodeGenTester {
         |        let z = 2000 / 405 + 20
             """.stripMargin.replace("\r", "")
     val module = TestUtil.parse(code, StatementParser.moduleParser(_)).asInstanceOf[Module]
+
+    val symbolTable = SymbolTableCreator.genSymbolTable(module)
 
     val compilationUnitIR = AST2IR.moduleToIR(module)
 
