@@ -23,8 +23,12 @@ object AST2IR {
   def methodToIR(symbolTable: SymbolTable, method: Method): MethodIR = {
     val innerSymbolTable = symbolTable.getInnerSymbolTable()
     val instructions = blockToIR(innerSymbolTable, method.body)
-
-    MethodIR(List(), method.name.value, "V", List(), instructions)
+    val modifiers = method.modifiers.map {
+      case Public => PublicIR
+      case Private => PrivateIR
+      case Protected => ProtectedIR
+    }
+    MethodIR(modifiers, method.name.value, "V", List(), instructions)
   }
 
   def blockToIR(symbolTable: SymbolTable, block: Block): List[InstructionIR] = {
@@ -62,10 +66,9 @@ object AST2IR {
       case assign: Assign => {
         val identifier = symbolTable.findIdentifier(assign.name.value)
 
-        if(identifier.isEmpty){
-          println(symbolTable)
-          throw new Exception(s"Identifier ${assign.name.value} not found")
-        }else {
+        if (identifier.isEmpty) {
+          throw new Exception(s"Identifier ${assign.name.value} not found in symbol table: $symbolTable")
+        } else {
           val instructions: List[InstructionIR] = blockToIR(symbolTable, assign.block) :+ IStore(identifier.get.id)
           instructions
         }

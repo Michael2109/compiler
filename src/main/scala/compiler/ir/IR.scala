@@ -14,11 +14,11 @@ object IR {
 
   case object PrivateIR extends ModifierIR
 
-  case class FieldIR(modifiers: List[ModifierIR], identifier: String, `type`: String)
+  case class FieldIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String)
 
-  case class MethodIR(modifiers: List[ModifierIR], identifier: String, `type`: String, parameters: List[ParameterIR], instructions: List[InstructionIR])
+  case class MethodIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String, parameters: List[ParameterIR], instructions: List[InstructionIR])
 
-  case class ParameterIR(modifiers: List[ModifierIR], identifier: String, `type`: String)
+  case class ParameterIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String)
 
   trait InstructionIR
 

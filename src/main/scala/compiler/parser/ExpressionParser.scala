@@ -13,7 +13,7 @@ object ExpressionParser {
 
   implicit def whitespace(cfg: P[_]): P[Unit] = LexicalParser.wscomment(cfg)
 
-  def accessModifier[_: P]: P[Modifier] = P(LexicalParser.kw("protected")).map(_ => Protected()) | P(LexicalParser.kw("private")).map(_ => Private()) | P(LexicalParser.kw("local")).map(_ => PackageLocal())
+  def accessModifier[_: P]: P[Modifier] = P(LexicalParser.kw("protected")).map(_ => Protected) | P(LexicalParser.kw("private")).map(_ => Private) | P(LexicalParser.kw("local")).map(_ => PackageLocal)
 
   def annotationParser[_: P]: P[Annotation] = P("@" ~ nameParser).map(Annotation)
 
@@ -52,7 +52,7 @@ object ExpressionParser {
 
   def ternaryParser[_: P]: P[Ternary] = P(LexicalParser.kw("if") ~ expressionParser ~ "then" ~ expressionParser ~ "else" ~ expressionParser).map(x => Ternary(x._1, x._2, x._3))
 
-  def typeModifier[_: P]: P[Modifier] = P(LexicalParser.kw("mutable")).map(_ => Final()) | P(LexicalParser.kw("abstract")).map(_ => Abstract()) | P(LexicalParser.kw("pure")).map(_ => Pure())
+  def typeModifier[_: P]: P[Modifier] = P(LexicalParser.kw("mutable")).map(_ => Final) | P(LexicalParser.kw("abstract")).map(_ => Abstract) | P(LexicalParser.kw("pure")).map(_ => Pure)
 
   def typeRefParser[_: P]: P[Type] = refParser.map(Type)
 

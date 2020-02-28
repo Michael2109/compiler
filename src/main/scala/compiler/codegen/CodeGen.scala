@@ -2,7 +2,7 @@ package compiler.codegen
 
 import compiler.ir.IR._
 import javassist.ClassPool
-import javassist.bytecode.{Bytecode, ClassFile, MethodInfo, Opcode}
+import javassist.bytecode.{AccessFlag, Bytecode, ClassFile, MethodInfo, Opcode}
 
 
 object CodeGen {
@@ -34,6 +34,7 @@ object CodeGen {
     })
 
     val methodInfo = new MethodInfo(classFile.getConstPool, methodIR.identifier, "()" + methodIR.`type`)
+    methodInfo.setAccessFlags(0)
     methodInfo.setCodeAttribute(bytecode.toCodeAttribute)
 
     classFile.addMethod(methodInfo)
