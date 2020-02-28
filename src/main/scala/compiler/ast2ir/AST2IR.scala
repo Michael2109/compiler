@@ -23,11 +23,12 @@ object AST2IR {
   def methodToIR(symbolTable: SymbolTable, method: Method): MethodIR = {
     val innerSymbolTable = symbolTable.getInnerSymbolTable()
     val instructions = blockToIR(innerSymbolTable, method.body)
+
     val modifiers = method.modifiers.map {
-      case Public => PublicIR
       case Private => PrivateIR
       case Protected => ProtectedIR
-    }
+    }.toList ++ (if(!method.modifiers.exists(modifier => modifier.equals(Public))) List(PublicIR) else List())
+
     MethodIR(modifiers, method.name.value, "V", List(), instructions)
   }
 

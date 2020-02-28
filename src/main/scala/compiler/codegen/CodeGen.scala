@@ -27,6 +27,12 @@ object CodeGen {
 
   def genMethodIRCode(classFile: ClassFile, methodIR: MethodIR): Unit = {
 
+    val modifiers: Int = methodIR.modifiers.map {
+      case PublicIR => AccessFlag.PUBLIC
+      case PrivateIR => AccessFlag.PRIVATE
+      case ProtectedIR => AccessFlag.PROTECTED
+    }.foldLeft(0)(_ | _)
+
     val bytecode = new Bytecode(classFile.getConstPool)
 
     methodIR.instructions.foreach(instruction => {
@@ -34,7 +40,7 @@ object CodeGen {
     })
 
     val methodInfo = new MethodInfo(classFile.getConstPool, methodIR.identifier, "()" + methodIR.`type`)
-    methodInfo.setAccessFlags(0)
+    methodInfo.setAccessFlags(modifiers)
     methodInfo.setCodeAttribute(bytecode.toCodeAttribute)
 
     classFile.addMethod(methodInfo)
