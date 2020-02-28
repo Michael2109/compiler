@@ -2,50 +2,52 @@ package compiler.ast2ir
 
 import compiler.ast.AST.{Add, _}
 import compiler.ir.IR._
+import compiler.symboltable.SymbolTable
 
 object AST2IR {
 
-  def moduleToIR(module: compiler.ast.AST.Module): CompilationUnitIR = {
+  def moduleToIR(symbolTable: SymbolTable, module: compiler.ast.AST.Module): CompilationUnitIR = {
 
     CompilationUnitIR(module.models.map(model => model match {
-      case classModel: ClassModel => modelToIR(classModel)
+      case classModel: ClassModel => modelToIR(symbolTable, classModel)
     }))
   }
 
-  def modelToIR(model: ClassModel): ClassIR = {
-    val methods = model.methods.map(method => methodToIR(method.asInstanceOf[Method]))
+  def modelToIR(symbolTable: SymbolTable, model: ClassModel): ClassIR = {
+    val methods = model.methods.map(method => methodToIR(symbolTable, method.asInstanceOf[Method]))
 
     ClassIR(List(), model.name.value, None, List(), List(), methods)
 
   }
 
-  def methodToIR(method: Method): MethodIR = {
-    val instructions = blockToIR(method.body)
+  def methodToIR(symbolTable: SymbolTable, method: Method): MethodIR = {
+    val innerSymbolTable = symbolTable.getInnerSymbolTable()
+    val instructions = blockToIR(innerSymbolTable, method.body)
 
     MethodIR(List(), method.name.value, "V", List(), instructions)
   }
 
-  def blockToIR(block: Block): List[InstructionIR] = {
+  def blockToIR(symbolTable: SymbolTable, block: Block): List[InstructionIR] = {
     block match {
-      case Inline(expression) => expressionToIR(expression)
-      case DoBlock(statements) => statements.flatMap(statement => statementToIR(statement)).toList
+      case Inline(expression) => expressionToIR(symbolTable, expression)
+      case DoBlock(statements) => statements.flatMap(statement => statementToIR(symbolTable, statement)).toList
     }
   }
 
-  def expressionToIR( expression: Expression): List[InstructionIR] = {
+  def expressionToIR(symbolTable: SymbolTable, expression: Expression): List[InstructionIR] = {
     expression match {
-      case IntConst(value) =>List(IConst0(value.intValue))
+      case IntConst(value) => List(IConst0(value.intValue))
       case ABinary(op, expr1, expr2) => {
 
-          expressionToIR( expr1) ++
-          expressionToIR( expr2) :+
-          opToIR(op)
+        expressionToIR(symbolTable, expr1) ++
+          expressionToIR(symbolTable, expr2) :+
+          opToIR(symbolTable, op)
 
       }
     }
   }
 
-  def opToIR(op: Operator): InstructionIR ={
+  def opToIR(symbolTable: SymbolTable, op: Operator): InstructionIR = {
     op match {
       case Add => IAdd
       case Subtract => ISubtract
@@ -54,12 +56,19 @@ object AST2IR {
     }
   }
 
-  def statementToIR(statement: Statement): List[InstructionIR] = {
+  def statementToIR(symbolTable: SymbolTable, statement: Statement): List[InstructionIR] = {
 
     statement match {
       case assign: Assign => {
-        val instructions: List[InstructionIR] = blockToIR(assign.block) :+ IStore(1)
-        instructions
+        val identifier = symbolTable.findIdentifier(assign.name.value)
+
+        if(identifier.isEmpty){
+          println(symbolTable)
+          throw new Exception(s"Identifier ${assign.name.value} not found")
+        }else {
+          val instructions: List[InstructionIR] = blockToIR(symbolTable, assign.block) :+ IStore(identifier.get.id)
+          instructions
+        }
       }
     }
   }

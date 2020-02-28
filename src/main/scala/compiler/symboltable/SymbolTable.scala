@@ -1,14 +1,12 @@
-package compiler.symbol_table
+package compiler.symboltable
 
-import compiler.ast.AST.Module
-
-import scala.collection.mutable.HashMap
+import scala.collection.mutable
 
 class SymbolTable {
 
   private lazy val innerSymbolTable: SymbolTable = new SymbolTable
 
-  private val identifierToRow: HashMap[String, SymbolTableRow] = HashMap()
+  private val identifierToRow: mutable.Map[String, SymbolTableRow] = mutable.LinkedHashMap()
 
   def getInnerSymbolTable(): SymbolTable = {
     innerSymbolTable
@@ -21,9 +19,16 @@ class SymbolTable {
   def findIdentifier(identifier: String): Option[SymbolTableRow] = {
     identifierToRow.get(identifier)
   }
+  def getElementsSize(): Int ={
+    identifierToRow.size
+  }
+
+  override def toString: String = {
+    identifierToRow.values.map(x => x.toString).mkString(System.lineSeparator())
+  }
 }
 
-class SymbolTableRow(identifier: String, id: Int, returnType: String, structureType: StructureType)
+case class SymbolTableRow(identifier: String, id: Int, returnType: String, structureType: StructureType)
 
 trait StructureType
 case object ClassStructure extends StructureType

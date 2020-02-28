@@ -1,7 +1,6 @@
-package compiler.symbol_table
+package compiler.symboltable
 
-import compiler.ast.AST.{ClassModel, DoBlock, Expression, Field, For, Inline, IntConst, Method, Model, Statement}
-import sun.tools.tree.IfStatement
+import compiler.ast.AST.{ABinary, Assign, ClassModel, DoBlock, Expression, Field, For, Inline, IntConst, Method, Model, Statement}
 
 object SymbolTableCreator {
 
@@ -25,16 +24,17 @@ object SymbolTableCreator {
   }
 
   def genSymbolTable(symbolTable: SymbolTable, method: Method):Unit ={
+    val innerSymbolTable = symbolTable.getInnerSymbolTable()
     val identifier = method.name.value
-    val symbolTableRow = new SymbolTableRow(identifier, -1, "Unit", MethodStructure)
-    symbolTable.getInnerSymbolTable().addRow(identifier, symbolTableRow)
+    val symbolTableRow = SymbolTableRow(identifier, -1, "Unit", MethodStructure)
+    innerSymbolTable.addRow(identifier, symbolTableRow)
 
     method.body match {
       case inline: Inline => {
-        genSymbolTable(symbolTable, inline)
+        genSymbolTable(innerSymbolTable, inline)
       }
       case doBlock: DoBlock => {
-        genSymbolTable(symbolTable, doBlock)
+        genSymbolTable(innerSymbolTable, doBlock)
       }
     }
   }
@@ -53,12 +53,20 @@ object SymbolTableCreator {
   def genSymbolTable(symbolTable: SymbolTable, expression: Expression): Unit = {
     expression match {
       case _: IntConst =>
+      case _: ABinary =>
     }
   }
 
   def genSymbolTable(symbolTable: SymbolTable, statement: Statement): Unit = {
     statement match {
       case _: For =>
+      case Inline(expression) => genSymbolTable(symbolTable, expression)
+      case Assign(name, t, immutable, block) => {
+        val identifier = name.value
+        val id =  symbolTable.getElementsSize() + 1
+        symbolTable.addRow(name.value, new SymbolTableRow(identifier, id, "Void", VariableStructure))
+        genSymbolTable(symbolTable, block)
+      }
     }
   }
 }

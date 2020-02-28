@@ -6,7 +6,7 @@ import compiler.ast.AST._
 import compiler.ast2ir.AST2IR
 import compiler.ir.IR._
 import compiler.parser.StatementParser
-import compiler.symbol_table.SymbolTableCreator
+import compiler.symboltable.SymbolTableCreator
 import compiler.utils.TestUtil
 import javassist.bytecode.MethodInfo
 
@@ -28,7 +28,9 @@ object CodeGenTester {
 
     val symbolTable = SymbolTableCreator.genSymbolTable(module)
 
-    val compilationUnitIR = AST2IR.moduleToIR(module)
+    println(symbolTable)
+
+    val compilationUnitIR = AST2IR.moduleToIR(symbolTable,module)
 
     println(compilationUnitIR)
 
