@@ -58,6 +58,7 @@ object CodeGen {
 
   private def modifierIRToAccessFlag(modifierIR: ModifierIR): Int = {
     modifierIR match {
+      case StaticIR => AccessFlag.STATIC
       case FinalIR => AccessFlag.FINAL
       case PublicIR => AccessFlag.PUBLIC
       case PrivateIR => AccessFlag.PRIVATE

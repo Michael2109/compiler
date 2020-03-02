@@ -12,18 +12,18 @@ object AST2IR {
 
   def modelToIR(symbolTable: SymbolTable, model: Model): ModelIR = {
     model match {
-      case classModel: ClassModel => modelToIR(symbolTable, classModel)
-      case objectModel: ObjectModel => modelToIR(symbolTable, objectModel)
+      case classModel: ClassModel => classModelToIR(symbolTable, classModel)
+      case objectModel: ObjectModel => objectModelToIR(symbolTable, objectModel)
     }
   }
 
-  def modelToIR(symbolTable: SymbolTable, model: ClassModel): ModelIR = {
+  def classModelToIR(symbolTable: SymbolTable, model: ClassModel): ModelIR = {
     val methods = model.methods.map(method => methodToIR(symbolTable, method.asInstanceOf[Method]))
 
     ModelIR(ClassModelTypeIR, List(), model.name.value, None, List(), List(), methods)
   }
 
-  def modelToIR(symbolTable: SymbolTable, model: ObjectModel): ModelIR = {
+  def objectModelToIR(symbolTable: SymbolTable, model: ObjectModel): ModelIR = {
 
     val fields: List[FieldIR] = FieldIR(List(FinalIR, PrivateIR), "instance", model.name.value) +: model.fields.map(field => fieldToIR(symbolTable, field)).toList
 
@@ -31,11 +31,13 @@ object AST2IR {
 
     val constructor = MethodIR(List(PublicIR), "<init>", "V", List(), List(ALoad(0), InvokeSpecial("java/lang/Object", "<init>", "()V"), ReturnIR))
 
-    ModelIR(ObjectModelTypeIR, List(), model.name.value, None, List(), fields, constructor +: methods)
+    val staticInitializationBlock = MethodIR(List(PublicIR, StaticIR), "<clinit>", "V", List(), List(New(s"${model.name.value}"), Dup, InvokeSpecial(s"${model.name.value}", "<init>", "()V"), PutStatic(model.name.value, "instance", model.name.value), ReturnIR))
+
+    ModelIR(ObjectModelTypeIR, List(), model.name.value, None, List(), fields, staticInitializationBlock +: constructor +: methods)
   }
 
   def fieldToIR(symbolTable: SymbolTable, field: Field): FieldIR = {
-    FieldIR(List(), field.name.value, field.classType.value)
+    FieldIR(List(), field.name.value, "()"+field.classType.value)
   }
 
   def methodToIR(symbolTable: SymbolTable, method: Method): MethodIR = {

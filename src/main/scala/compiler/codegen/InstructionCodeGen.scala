@@ -7,6 +7,8 @@ object InstructionCodeGen {
 
   def genInstructionCode(bytecode: Bytecode, instruction: InstructionIR): Unit = {
     instruction match {
+      case Dup => bytecode.add(Opcode.DUP)
+      case newInstance: New => bytecode.addNew(newInstance.clazz)
       case aLoad: ALoad => bytecode.addAload(aLoad.value)
       case IAdd => bytecode.add(Opcode.IADD)
       case ISubtract => bytecode.add(Opcode.ISUB)
@@ -15,6 +17,7 @@ object InstructionCodeGen {
       case iConst0: IConst0 => bytecode.addIconst(iConst0.value)
       case IStore(id) => bytecode.addIstore(id)
       case invokeSpecial: InvokeSpecial => bytecode.addInvokespecial(invokeSpecial.clazz, invokeSpecial.methodName, invokeSpecial.description)
+      case putStatic: PutStatic => bytecode.addPutstatic(putStatic.fieldLocation, putStatic.fieldName, putStatic.clazz)
       case ReturnIR => bytecode.addReturn(null)
       case maxLocals: MaxLocals => bytecode.setMaxLocals(maxLocals.value)
     }

@@ -21,6 +21,8 @@ object IR {
 
   case object FinalIR extends ModifierIR
 
+  case object StaticIR extends ModifierIR
+
   case class FieldIR(modifiers: Seq[ModifierIR], name: String, description: String)
 
   case class MethodIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String, parameters: List[ParameterIR], instructions: List[InstructionIR])
@@ -28,6 +30,12 @@ object IR {
   case class ParameterIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String)
 
   trait InstructionIR
+
+  case class New(clazz: String) extends InstructionIR
+
+  case object Dup extends InstructionIR
+
+  case class PutStatic(fieldLocation: String, fieldName: String, clazz: String) extends InstructionIR
 
   case class ALoad(value: Int) extends InstructionIR
 
