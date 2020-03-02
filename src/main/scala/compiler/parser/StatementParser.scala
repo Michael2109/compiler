@@ -55,7 +55,11 @@ class Statements(indent: Int) {
 
   def methodParser[_: P]: P[Statement] = P(ExpressionParser.modifiers ~ LexicalParser.kw("let") ~ ExpressionParser.nameParser ~ "(" ~/ fieldParser.rep(sep = ",") ~ ")" ~ (":" ~ ExpressionParser.typeRefParser).? ~ "=" ~ blockParser).map(x => Method(x._2, Seq(), x._3, x._1, x._4, x._5))
 
-  def modelParser[_: P]: P[Model] = P(LexicalParser.kw("class") ~/ ExpressionParser.nameParser ~ ("extends" ~ ExpressionParser.typeRefParser).? ~ (LexicalParser.kw("with") ~ ExpressionParser.typeRefParser).rep() ~~ indentedBlock).map(x => ClassModel(x._1, Seq(), Seq(), x._2, Seq(), x._3, x._4.toList))
+  def modelParser[_: P]: P[Model] = P(classParser | objectParser)
+
+  def classParser[_: P]: P[Model] = P(LexicalParser.kw("class") ~/ ExpressionParser.nameParser ~ ("extends" ~ ExpressionParser.typeRefParser).? ~ (LexicalParser.kw("with") ~ ExpressionParser.typeRefParser).rep() ~~ indentedBlock).map(x => ClassModel(x._1, Seq(), Seq(), x._2, Seq(), x._3, x._4.toList))
+
+  def objectParser[_: P]: P[Model] = P(LexicalParser.kw("object") ~/ ExpressionParser.nameParser ~ ("extends" ~ ExpressionParser.typeRefParser).? ~ (LexicalParser.kw("with") ~ ExpressionParser.typeRefParser).rep() ~~ indentedBlock).map(x => ObjectModel(x._1, Seq(), Seq(), x._2, Seq(), x._3, x._4.toList))
 
   def moduleParser[_: P]: P[Module] = P(nameSpaceParser ~ importParser.rep ~ modelParser.rep).map(x => Module(ModuleHeader(x._1, x._2), x._3))
 

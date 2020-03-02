@@ -2,10 +2,6 @@ package compiler.compiler
 
 import java.nio.file.{Path, Paths}
 
-import fastparse._
-import compiler.ast.AST
-import compiler.parser.StatementParser
-
 import scala.io.Source
 
 object Compiler {
@@ -20,14 +16,13 @@ object Compiler {
     val asts = cobaltFiles.map(cobaltFile => {
       //parse(cobaltFile.replace("\r", ""), StatementParser.file_input(_))
     })
-/*
+    /*
 
-    val modules: Seq[AST.Module] = asts.map(ast => ast match {
-      case Parsed.Success(value, _) => value
-      case Parsed.Failure(a, b, c) => throw new Exception("Failed compiling: " + a + " : " + b + " : " + c)
-    })
-*/
-
+        val modules: Seq[AST.Module] = asts.map(ast => ast match {
+          case Parsed.Success(value, _) => value
+          case Parsed.Failure(a, b, c) => throw new Exception("Failed compiling: " + a + " : " + b + " : " + c)
+        })
+    */
 
 
     /*

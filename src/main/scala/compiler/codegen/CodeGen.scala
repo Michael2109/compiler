@@ -2,7 +2,7 @@ package compiler.codegen
 
 import compiler.ir.IR._
 import javassist.ClassPool
-import javassist.bytecode.{AccessFlag, Bytecode, ClassFile, MethodInfo, Opcode}
+import javassist.bytecode.{AccessFlag, Bytecode, ClassFile, MethodInfo}
 
 
 object CodeGen {
@@ -14,7 +14,7 @@ object CodeGen {
     null
   }
 
-  def genClassIRCode(classIR: ClassIR): Array[Byte] = {
+  def genModelIRCode(classIR: ModelIR): Array[Byte] = {
 
     val classPool = ClassPool.getDefault
 

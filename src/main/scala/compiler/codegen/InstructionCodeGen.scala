@@ -1,6 +1,6 @@
 package compiler.codegen
 
-import compiler.ir.IR.{ALoad, IAdd, IConst0, IDivide, IMultiply, IStore, ISubtract, InstructionIR, InvokeSpecial, MaxLocals, ReturnIR}
+import compiler.ir.IR._
 import javassist.bytecode.{Bytecode, Opcode}
 
 object InstructionCodeGen {
@@ -15,7 +15,7 @@ object InstructionCodeGen {
       case iConst0: IConst0 => bytecode.addIconst(iConst0.value)
       case IStore(id) => bytecode.addIstore(id)
       case invokeSpecial: InvokeSpecial => bytecode.addInvokespecial(invokeSpecial.clazz, invokeSpecial.methodName, invokeSpecial.description)
-      case `return`: ReturnIR => bytecode.addReturn(null)
+      case ReturnIR => bytecode.addReturn(null)
       case maxLocals: MaxLocals => bytecode.setMaxLocals(maxLocals.value)
     }
   }

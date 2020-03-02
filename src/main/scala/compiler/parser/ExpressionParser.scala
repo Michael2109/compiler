@@ -1,12 +1,10 @@
 package compiler.parser
 
-import fastparse._
 import compiler.ast.AST
 import compiler.ast.AST._
-
-import scala.collection.mutable
-import scala.language.implicitConversions
 import fastparse._
+
+import scala.language.implicitConversions
 
 
 object ExpressionParser {
@@ -17,16 +15,19 @@ object ExpressionParser {
 
   def annotationParser[_: P]: P[Annotation] = P("@" ~ nameParser).map(Annotation)
 
-  def parenthesisParser[_: P]: P[Expression] = P( "(" ~ (expressionParser) ~ ")" )
-  def termParser[_: P]: P[Expression] = P(Chain(simpleExpressionParser, multiply | divide ))
+  def parenthesisParser[_: P]: P[Expression] = P("(" ~ (expressionParser) ~ ")")
+
+  def termParser[_: P]: P[Expression] = P(Chain(simpleExpressionParser, multiply | divide))
+
   def arithmeticExpressionParser[_: P]: P[Expression] = P(Chain(termParser, add | subtract))
+
   def relationalExpressionParser[_: P]: P[Expression] = P(Chain(arithmeticExpressionParser, LtE | Lt | GtE | Gt))
 
   def simpleExpressionParser[_: P]: P[Expression] = methodCallParser | newClassInstanceParser | ternaryParser | numberParser | identifierParser | stringLiteral | parenthesisParser
 
   def expressionParser[_: P]: P[Expression] = {
 
-    P(Chain(relationalExpressionParser, and | or)).rep(sep = ".", min = 1 ).map(expressions => {
+    P(Chain(relationalExpressionParser, and | or)).rep(sep = ".", min = 1).map(expressions => {
       expressions.length match {
         case 1 => expressions.head
         case _ => NestedExpr(expressions)
@@ -56,11 +57,11 @@ object ExpressionParser {
 
   def typeRefParser[_: P]: P[Type] = refParser.map(Type)
 
-  def refParser[_: P]: P[Ref] = P(nameParser.rep(sep = ".", min=2)).map(x => RefQual(QualName(NameSpace(x.dropRight(1)), x.last))) | P(nameParser).map(RefLocal)
+  def refParser[_: P]: P[Ref] = P(nameParser.rep(sep = ".", min = 2)).map(x => RefQual(QualName(NameSpace(x.dropRight(1)), x.last))) | P(nameParser).map(RefLocal)
 
-  def Chain[_: P](p: => P[Expression], op: => P[Operator]): P[Expression] = P( p ~ (op ~ p).rep ).map{
+  def Chain[_: P](p: => P[Expression], op: => P[Operator]): P[Expression] = P(p ~ (op ~ p).rep).map {
     case (lhs, chunks) =>
-      chunks.foldLeft(lhs){case (lhs, (op, rhs)) =>
+      chunks.foldLeft(lhs) { case (lhs, (op, rhs)) =>
         op match {
           case op: ABinOp => new ABinary(op, lhs, rhs)
           case op: BBinOp => new BBinary(op, lhs, rhs)
@@ -70,16 +71,28 @@ object ExpressionParser {
   }
 
   def op[T, _: P](s: => P[Unit], rhs: T) = s.!.map(_ => rhs)
+
   def Lt[_: P]: P[Operator] = op("<", AST.Less)
+
   def Gt[_: P]: P[Operator] = op(">", AST.Greater)
+
   def Eq[_: P]: P[Operator] = op("==", AST.Equal)
+
   def GtE[_: P]: P[Operator] = op(">=", AST.GreaterEqual)
+
   def LtE[_: P]: P[Operator] = op("<=", AST.LessEqual)
+
   def comp_op[_: P]: P[Operator] = P(LtE | GtE | Eq | Gt | Lt)
+
   def add[_: P]: P[Operator] = op("+", AST.Add)
+
   def subtract[_: P]: P[Operator] = op("-", AST.Subtract)
-  def multiply [_: P]: P[Operator] = op("*", AST.Multiply)
+
+  def multiply[_: P]: P[Operator] = op("*", AST.Multiply)
+
   def divide[_: P]: P[Operator] = op("/", AST.Divide)
+
   def and[_: P]: P[Operator] = op("&&", AST.And)
+
   def or[_: P]: P[Operator] = op("||", AST.Or)
 }

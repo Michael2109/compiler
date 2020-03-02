@@ -1,29 +1,33 @@
 package compiler.symboltable
 
-import compiler.ast.AST.{ABinary, Assign, ClassModel, DoBlock, Expression, Field, For, Inline, IntConst, Method, Model, Statement}
+import compiler.ast.AST._
 
 object SymbolTableCreator {
 
-  def genSymbolTable(module: compiler.ast.AST.Module): SymbolTable ={
+  def genSymbolTable(module: compiler.ast.AST.Module): SymbolTable = {
     val symbolTable = new SymbolTable
     module.models.foreach(genSymbolTable(symbolTable, _))
     symbolTable
   }
 
-  def genSymbolTable(symbolTable: SymbolTable, model: Model): Unit ={
+  def genSymbolTable(symbolTable: SymbolTable, model: Model): Unit = {
     model match {
       case classModel: ClassModel => {
         classModel.fields.foreach(genSymbolTable(symbolTable, _))
         classModel.methods.foreach(method => genSymbolTable(symbolTable, method.asInstanceOf[Method]))
       }
+      case objectModel: ObjectModel => {
+        objectModel.fields.foreach(genSymbolTable(symbolTable, _))
+        objectModel.methods.foreach(method => genSymbolTable(symbolTable, method.asInstanceOf[Method]))
+      }
     }
   }
 
-  def genSymbolTable(symbolTable: SymbolTable, field: Field): Unit ={
+  def genSymbolTable(symbolTable: SymbolTable, field: Field): Unit = {
 
   }
 
-  def genSymbolTable(symbolTable: SymbolTable, method: Method):Unit ={
+  def genSymbolTable(symbolTable: SymbolTable, method: Method): Unit = {
     val innerSymbolTable = symbolTable.getInnerSymbolTable()
     val identifier = method.name.value
     val symbolTableRow = SymbolTableRow(identifier, -1, "Unit", MethodStructure)
@@ -39,12 +43,12 @@ object SymbolTableCreator {
     }
   }
 
-  def genSymbolTable(symbolTable: SymbolTable, inline: Inline): Unit ={
+  def genSymbolTable(symbolTable: SymbolTable, inline: Inline): Unit = {
     genSymbolTable(symbolTable, inline.expression)
   }
 
 
-  def genSymbolTable(symbolTable: SymbolTable, doBlock: DoBlock): Unit ={
+  def genSymbolTable(symbolTable: SymbolTable, doBlock: DoBlock): Unit = {
     doBlock.statement.foreach(statement => {
       genSymbolTable(symbolTable, statement)
     })
@@ -63,7 +67,7 @@ object SymbolTableCreator {
       case Inline(expression) => genSymbolTable(symbolTable, expression)
       case Assign(name, t, immutable, block) => {
         val identifier = name.value
-        val id =  symbolTable.getElementsSize() + 1
+        val id = symbolTable.getNextElementId(VariableStructure)
         symbolTable.addRow(name.value, new SymbolTableRow(identifier, id, "Void", VariableStructure))
         genSymbolTable(symbolTable, block)
       }

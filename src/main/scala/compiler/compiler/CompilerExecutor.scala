@@ -31,6 +31,9 @@ object CompilerExecutor {
 }
 
 trait CommandLineOption
+
 case object ClassPath extends CommandLineOption
+
 case object DestinationPath extends CommandLineOption
+
 case object FilePath extends CommandLineOption

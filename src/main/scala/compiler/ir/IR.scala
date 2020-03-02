@@ -2,9 +2,14 @@ package compiler.ir
 
 object IR {
 
-  case class CompilationUnitIR(classes: Seq[ClassIR])
+  case class CompilationUnitIR(classes: Seq[ModelIR])
 
-  case class ClassIR(modifiers: List[ModifierIR], name: String, extendedBy: Option[String], interfaces: List[String], fields: List[FieldIR], methods: Seq[MethodIR])
+  case class ModelIR(modelTypeIR: ModelTypeIR, modifiers: List[ModifierIR], name: String, extendedBy: Option[String], interfaces: List[String], fields: List[FieldIR], methods: Seq[MethodIR])
+
+  trait ModelTypeIR
+
+  case object ObjectModelTypeIR extends ModelTypeIR
+  case object ClassModelTypeIR extends ModelTypeIR
 
   trait ModifierIR
 
@@ -26,7 +31,7 @@ object IR {
 
   case class InvokeSpecial(clazz: String, methodName: String, description: String) extends InstructionIR
 
-  case class ReturnIR() extends InstructionIR
+  case object ReturnIR extends InstructionIR
 
   case class MaxLocals(value: Int) extends InstructionIR
 
@@ -35,8 +40,11 @@ object IR {
   case class IConst0(value: Int) extends InstructionIR
 
   case object IAdd extends InstructionIR
+
   case object ISubtract extends InstructionIR
+
   case object IMultiply extends InstructionIR
+
   case object IDivide extends InstructionIR
 
 }

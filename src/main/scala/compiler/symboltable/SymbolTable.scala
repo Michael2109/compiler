@@ -19,8 +19,13 @@ class SymbolTable {
   def findIdentifier(identifier: String): Option[SymbolTableRow] = {
     identifierToRow.get(identifier)
   }
-  def getElementsSize(): Int ={
+
+  def getElementsSize(): Int = {
     identifierToRow.size
+  }
+
+  def getNextElementId(structureType: StructureType): Int = {
+    identifierToRow.values.count(_.equals(structureType)) + 1
   }
 
   override def toString: String = {
@@ -31,7 +36,11 @@ class SymbolTable {
 case class SymbolTableRow(identifier: String, id: Int, returnType: String, structureType: StructureType)
 
 trait StructureType
+
 case object ClassStructure extends StructureType
+
 case object MethodStructure extends StructureType
+
 case object FieldStructure extends StructureType
+
 case object VariableStructure extends StructureType
