@@ -19,7 +19,9 @@ object IR {
 
   case object PrivateIR extends ModifierIR
 
-  case class FieldIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String)
+  case object FinalIR extends ModifierIR
+
+  case class FieldIR(modifiers: Seq[ModifierIR], name: String, description: String)
 
   case class MethodIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String, parameters: List[ParameterIR], instructions: List[InstructionIR])
 

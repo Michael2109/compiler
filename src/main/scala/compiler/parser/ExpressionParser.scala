@@ -45,7 +45,7 @@ object ExpressionParser {
 
   def nameParser[_: P]: P[Name] = LexicalParser.identifier.map(x => Name(x))
 
-  def newClassInstanceParser[_: P]: P[NewClassInstance] = P(LexicalParser.kw("new") ~ typeRefParser ~ LexicalParser.kw("(") ~ expressionParser.rep(sep = ",") ~ LexicalParser.kw(")")).map(x => NewClassInstance(x._1, x._2, None))
+  def newClassInstanceParser[_: P]: P[NewClassInstance] = P(LexicalParser.kw("new") ~ typeParser ~ LexicalParser.kw("(") ~ expressionParser.rep(sep = ",") ~ LexicalParser.kw(")")).map(x => NewClassInstance(x._1, x._2, None))
 
   def numberParser[_: P]: P[Expression] = P(LexicalParser.floatnumber ~ P("F" | "f")).map(FloatConst) | P(LexicalParser.longinteger).map(LongConst) | P(LexicalParser.floatnumber).map(DoubleConst) | P(LexicalParser.integer).map(IntConst)
 
@@ -55,9 +55,7 @@ object ExpressionParser {
 
   def typeModifier[_: P]: P[Modifier] = P(LexicalParser.kw("mutable")).map(_ => Final) | P(LexicalParser.kw("abstract")).map(_ => Abstract) | P(LexicalParser.kw("pure")).map(_ => Pure)
 
-  def typeRefParser[_: P]: P[Type] = refParser.map(Type)
-
-  def refParser[_: P]: P[Ref] = P(nameParser.rep(sep = ".", min = 2)).map(x => RefQual(QualName(NameSpace(x.dropRight(1)), x.last))) | P(nameParser).map(RefLocal)
+  def typeParser[_: P]: P[Type] = P(LexicalParser.identifier.map(x => Type(x)))
 
   def Chain[_: P](p: => P[Expression], op: => P[Operator]): P[Expression] = P(p ~ (op ~ p).rep).map {
     case (lhs, chunks) =>

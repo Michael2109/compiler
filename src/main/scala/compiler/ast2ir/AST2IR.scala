@@ -24,12 +24,18 @@ object AST2IR {
   }
 
   def modelToIR(symbolTable: SymbolTable, model: ObjectModel): ModelIR = {
+
+    val fields: List[FieldIR] = FieldIR(List(FinalIR, PrivateIR), "instance", model.name.value) +: model.fields.map(field => fieldToIR(symbolTable, field)).toList
+
     val methods = model.methods.map(method => methodToIR(symbolTable, method.asInstanceOf[Method]))
 
-    //modifiers: Seq[ModifierIR], identifier: String, `type`: String, parameters: List[ParameterIR], instructions: List[InstructionIR
     val constructor = MethodIR(List(PublicIR), "<init>", "V", List(), List(ALoad(0), InvokeSpecial("java/lang/Object", "<init>", "()V"), ReturnIR))
 
-    ModelIR(ObjectModelTypeIR, List(), model.name.value, None, List(), List(), constructor +: methods)
+    ModelIR(ObjectModelTypeIR, List(), model.name.value, None, List(), fields, constructor +: methods)
+  }
+
+  def fieldToIR(symbolTable: SymbolTable, field: Field): FieldIR = {
+    FieldIR(List(), field.name.value, field.classType.value)
   }
 
   def methodToIR(symbolTable: SymbolTable, method: Method): MethodIR = {

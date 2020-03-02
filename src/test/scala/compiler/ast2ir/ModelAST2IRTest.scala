@@ -4,7 +4,7 @@ import java.nio.file.Paths
 
 import compiler.ast.AST.{ABinary, Add, Assign, ClassModel, DoBlock, Inline, IntConst, Method, Model, Module, ModuleHeader, Name, NameSpace, ObjectModel}
 import compiler.codegen.{CodeGen, CodeGenTestUtils}
-import compiler.ir.IR.{ALoad, ClassModelTypeIR, IAdd, IConst0, IStore, InvokeSpecial, MethodIR, ModelIR, ObjectModelTypeIR, PublicIR, ReturnIR}
+import compiler.ir.IR.{ALoad, ClassModelTypeIR, FieldIR, FinalIR, IAdd, IConst0, IStore, InvokeSpecial, MethodIR, ModelIR, ObjectModelTypeIR, PrivateIR, PublicIR, ReturnIR}
 import compiler.symboltable.{SymbolTable, SymbolTableCreator}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
@@ -35,7 +35,7 @@ class ModelAST2IRTest extends AnyFunSpec with Matchers {
 
       val bytecode = CodeGen.genModelIRCode(ir)
       CodeGenTestUtils.writeClassToFile(bytecode, Paths.get(ir.name + ".class"))
-      ir shouldBe ModelIR(ObjectModelTypeIR,List(),"ClassName",None,List(),List(),List(MethodIR(List(PublicIR),"<init>","V",List(),List(ALoad(0), InvokeSpecial("java/lang/Object","<init>","()V"), ReturnIR)), MethodIR(List(PublicIR),"methodName","V",List(),List(IConst0(10), IStore(1)))))
+      ir shouldBe ModelIR(ObjectModelTypeIR,List(),"ClassName",None,List(),List(FieldIR(List(FinalIR, PrivateIR),"instance","ClassName")),List(MethodIR(List(PublicIR),"<init>","V",List(),List(ALoad(0), InvokeSpecial("java/lang/Object","<init>","()V"), ReturnIR)), MethodIR(List(PublicIR),"methodName","V",List(),List(IConst0(10), IStore(1)))))
     }
   }
 }

@@ -8,17 +8,9 @@ object AST {
 
   case class Import(loc: Seq[Name])
 
-  case class Field(name: Name, `type`: Type, init: Option[Type])
+  case class Field(name: Name, classType: Type, init: Option[Type])
 
-  case class Type(ref: Ref)
-
-  trait Ref
-
-  case class RefSpecial(specialRef: SpecialRef) extends Ref
-
-  case class RefLocal(name: Name) extends Ref
-
-  case class RefQual(qualName: QualName) extends Ref
+  case class Type(value: String)
 
   trait SpecialRef
 

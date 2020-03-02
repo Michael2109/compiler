@@ -15,8 +15,8 @@ object IRUtils {
       }
     }*/
   /*
-    def typeToBytecodeType(`type`: Type): String = {
-      `type` match {
+    def typeToBytecodeType(`description`: Type): String = {
+      `description` match {
         case "int" => "I"
         case "long" => "J"
         case "String" => "Ljava/lang/String;"
