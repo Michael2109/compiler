@@ -10,6 +10,8 @@ object AST {
 
   case class Field(name: Name, classType: Type, init: Option[Type])
 
+  case class Parameter(name: Name, classType: Type, init: Option[Type])
+
   case class Type(value: String)
 
   trait SpecialRef
@@ -110,7 +112,7 @@ object AST {
 
   trait Statement
 
-  case class Method(name: Name, annotations: Seq[Annotation], fields: Seq[Field], modifiers: Seq[Modifier], returnType: Option[Type], body: Block) extends Statement
+  case class Method(name: Name, annotations: Seq[Annotation], parameters: Seq[Parameter], modifiers: Seq[Modifier], returnType: Option[Type], body: Block) extends Statement
 
   case class For() extends Statement
 

@@ -53,7 +53,9 @@ class Statements(indent: Int) {
 
   def fieldParser[_: P]: P[Field] = P(ExpressionParser.nameParser ~ ":" ~ ExpressionParser.typeParser).map(x => Field(x._1, x._2, None))
 
-  def methodParser[_: P]: P[Statement] = P(ExpressionParser.modifiers ~ LexicalParser.kw("let") ~ ExpressionParser.nameParser ~ "(" ~/ fieldParser.rep(sep = ",") ~ ")" ~ (":" ~ ExpressionParser.typeParser).? ~ "=" ~ blockParser).map(x => Method(x._2, Seq(), x._3, x._1, x._4, x._5))
+  def parameterParser[_: P]: P[Parameter] = P(ExpressionParser.nameParser ~ ":" ~ ExpressionParser.typeParser).map(x => Parameter(x._1, x._2, None))
+
+  def methodParser[_: P]: P[Statement] = P(ExpressionParser.modifiers ~ LexicalParser.kw("let") ~ ExpressionParser.nameParser ~ "(" ~/ parameterParser.rep(sep = ",") ~ ")" ~ (":" ~ ExpressionParser.typeParser).? ~ "=" ~ blockParser).map(x => Method(x._2, Seq(), x._3, x._1, x._4, x._5))
 
   def modelParser[_: P]: P[Model] = P(classParser | objectParser)
 

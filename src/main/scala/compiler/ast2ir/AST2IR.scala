@@ -49,7 +49,9 @@ object AST2IR {
       case Protected => ProtectedIR
     }.toList ++ (if (!method.modifiers.exists(modifier => modifier.equals(Public))) List(PublicIR) else List())
 
-    MethodIR(modifiers, method.name.value, "V", List(), instructions)
+    val parameters = method.parameters.map(parameter => ParameterIR(List(), parameter.name.value, parameter.classType.value)).toList
+
+    MethodIR(modifiers, method.name.value, "V", parameters, instructions)
   }
 
   def blockToIR(symbolTable: SymbolTable, block: Block): List[InstructionIR] = {
