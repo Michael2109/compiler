@@ -6,6 +6,7 @@ object SymbolTableCreator {
 
   def genSymbolTable(module: compiler.ast.AST.Module): SymbolTable = {
     val symbolTable = new SymbolTable
+    module.header.imports.foreach(imp => symbolTable.addImport(imp.loc.last.value, imp.loc.map(_.value).toList))
     module.models.foreach(genSymbolTable(symbolTable, _))
     symbolTable
   }

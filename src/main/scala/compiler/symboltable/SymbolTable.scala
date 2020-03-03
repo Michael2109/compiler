@@ -6,10 +6,20 @@ class SymbolTable {
 
   private lazy val innerSymbolTable: SymbolTable = new SymbolTable
 
+  private val imports: mutable.Map[String, List[String]] = mutable.HashMap()
+
   private val identifierToRow: mutable.Map[String, SymbolTableRow] = mutable.LinkedHashMap()
 
   def getInnerSymbolTable(): SymbolTable = {
     innerSymbolTable
+  }
+
+  def addImport(className: String, locations: List[String]): Unit = {
+    imports.put(className, locations)
+  }
+
+  def getImport(className: String): Option[List[String]] = {
+    imports.get(className)
   }
 
   def addRow(identifier: String, symbolTableRow: SymbolTableRow): Unit = {

@@ -99,4 +99,8 @@ object AST2IR {
     }
   }
 
+  def getFullClassLocation(symbolTable: SymbolTable, className: String): Option[String] ={
+      val importLocations = symbolTable.getImport(className).mkString("/")
+  }
+
 }
