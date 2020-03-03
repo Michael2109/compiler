@@ -37,7 +37,7 @@ object AST2IR {
   }
 
   def fieldToIR(symbolTable: SymbolTable, field: Field): FieldIR = {
-    FieldIR(List(), field.name.value, "()"+field.classType.value)
+    FieldIR(List(), field.name.value, "()" + field.classType.value)
   }
 
   def methodToIR(symbolTable: SymbolTable, method: Method): MethodIR = {
@@ -49,9 +49,20 @@ object AST2IR {
       case Protected => ProtectedIR
     }.toList ++ (if (!method.modifiers.exists(modifier => modifier.equals(Public))) List(PublicIR) else List())
 
-    val parameters = method.parameters.map(parameter => ParameterIR(List(), parameter.name.value, parameter.classType.value)).toList
+    val parameters = method.parameters.map(parameter => {
+      getTypeDescriptor(symbolTable, parameter.classType.value) match {
+        case Some(value) => ParameterIR(List(), parameter.name.value, value)
+        case None => throw new Exception(s"Type descriptor not found: ${parameter.classType.value}")
+      }
 
-    MethodIR(modifiers, method.name.value, "V", parameters, instructions)
+    }).toList
+
+    val returnTypeDescriptor = getTypeDescriptor(symbolTable, method.returnType.get.value) match {
+      case Some(returnType) => returnType
+      case None => throw new Exception(s"No method return type: ${method.returnType.get.value}")
+    }
+
+    MethodIR(modifiers, method.name.value, returnTypeDescriptor, parameters, instructions)
   }
 
   def blockToIR(symbolTable: SymbolTable, block: Block): List[InstructionIR] = {
@@ -99,8 +110,34 @@ object AST2IR {
     }
   }
 
-  def getFullClassLocation(symbolTable: SymbolTable, className: String): Option[String] ={
-      val importLocations = symbolTable.getImport(className).mkString("/")
+  def test(): Integer ={
+ 1
+  }
+
+  /**
+   * Example: com/snark/Boojum
+   * @param symbolTable
+   * @param className
+   * @return
+   */
+  def getInternalName(symbolTable: SymbolTable, className: String): Option[String] = {
+    symbolTable.getImport(className) match {
+      case Some(locations) => Some(locations.mkString("/"))
+      case None => None
+    }
+  }
+
+  /**
+   * Example: [[Ljava/lang/Object;
+   * @param symbolTable
+   * @param className
+   * @return
+   */
+  def getTypeDescriptor(symbolTable: SymbolTable, className: String): Option[String] = {
+    getInternalName(symbolTable, className) match {
+      case Some(internalName) =>Some(s"L$internalName;")
+      case None => None
+    }
   }
 
 }

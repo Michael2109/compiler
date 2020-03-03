@@ -27,7 +27,7 @@ object IR {
 
   case class MethodIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String, parameters: List[ParameterIR], instructions: List[InstructionIR])
 
-  case class ParameterIR(modifiers: Seq[ModifierIR], identifier: String, `type`: String)
+  case class ParameterIR(modifiers: Seq[ModifierIR], identifier: String, signature: String)
 
   trait InstructionIR
 
