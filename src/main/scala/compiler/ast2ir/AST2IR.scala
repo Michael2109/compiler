@@ -57,9 +57,9 @@ object AST2IR {
 
     }).toList
 
-    val returnTypeDescriptor = getTypeDescriptor(symbolTable, method.returnType.get.value) match {
+    val returnTypeDescriptor = getTypeDescriptor(symbolTable, method.returnType) match {
       case Some(returnType) => returnType
-      case None => throw new Exception(s"No method return type: ${method.returnType.get.value}")
+      case None => throw new Exception(s"No method return type: ${method.returnType}")
     }
 
     MethodIR(modifiers, method.name.value, returnTypeDescriptor, parameters, instructions)
@@ -108,10 +108,6 @@ object AST2IR {
         }
       }
     }
-  }
-
-  def test(): Integer ={
- 1
   }
 
   /**

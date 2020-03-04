@@ -112,7 +112,7 @@ object AST {
 
   trait Statement
 
-  case class Method(name: Name, annotations: Seq[Annotation], parameters: Seq[Parameter], modifiers: Seq[Modifier], returnType: Option[Type], body: Block) extends Statement
+  case class Method(name: Name, annotations: Seq[Annotation], parameters: Seq[Parameter], modifiers: Seq[Modifier], returnType: Type, body: Block) extends Statement
 
   case class For() extends Statement
 
