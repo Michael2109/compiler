@@ -57,9 +57,11 @@ object AST2IR {
 
     }).toList
 
-    val returnTypeDescriptor = getTypeDescriptor(symbolTable, method.returnType) match {
+    val returnTypeClass = method.returnType.value
+
+    val returnTypeDescriptor = getTypeDescriptor(symbolTable, returnTypeClass) match {
       case Some(returnType) => returnType
-      case None => throw new Exception(s"No method return type: ${method.returnType}")
+      case None => throw new Exception(s"No method return type: ${returnTypeClass}")
     }
 
     MethodIR(modifiers, method.name.value, returnTypeDescriptor, parameters, instructions)
@@ -112,6 +114,7 @@ object AST2IR {
 
   /**
    * Example: com/snark/Boojum
+   *
    * @param symbolTable
    * @param className
    * @return
@@ -125,14 +128,19 @@ object AST2IR {
 
   /**
    * Example: [[Ljava/lang/Object;
+   *
    * @param symbolTable
    * @param className
    * @return
    */
   def getTypeDescriptor(symbolTable: SymbolTable, className: String): Option[String] = {
     getInternalName(symbolTable, className) match {
-      case Some(internalName) =>Some(s"L$internalName;")
-      case None => None
+      case Some(internalName) => Some(s"L$internalName;")
+      case None => className match {
+        case "Unit" => Some("V")
+        case "Int" => Some("I")
+        case _ => None
+      }
     }
   }
 

@@ -13,7 +13,7 @@ class MethodParserTest extends AnyFunSpec with Matchers {
         """let methodName() = do
           |    let x = 10
             """.stripMargin.replace("\r", "")
-      TestUtil.parse(code, StatementParser.methodParser(_)) shouldBe Method(Name("methodName"), List(), List(), List(), None, DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))
+      TestUtil.parse(code, StatementParser.methodParser(_)) shouldBe Method(Name("methodName"), List(), List(), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))
     }
 
     it("Should parse a method with one parameter") {
@@ -21,7 +21,7 @@ class MethodParserTest extends AnyFunSpec with Matchers {
         """let methodName(x: Int) = do
           |    let x = 10
             """.stripMargin.replace("\r", "")
-      TestUtil.parse(code, StatementParser.methodParser(_)) shouldBe Method(Name("methodName"),List(),List(Parameter(Name("x"),Type("Int"),None)),List(),None,DoBlock(List(Assign(Name("x"),None,true,Inline(IntConst(10))))))
+      TestUtil.parse(code, StatementParser.methodParser(_)) shouldBe Method(Name("methodName"),List(),List(Parameter(Name("x"),Type("Int"),None)),List(),Type("Unit"),DoBlock(List(Assign(Name("x"),None,true,Inline(IntConst(10))))))
     }
 
   }

@@ -15,7 +15,7 @@ class ModelParserTest extends AnyFunSpec with Matchers {
           |    let methodName() = do
           |        let x = 10
             """.stripMargin.replace("\r", "")
-      TestUtil.parse(code, StatementParser.moduleParser(_)) shouldBe Module(ModuleHeader(NameSpace(List(Name("x"), Name("y"), Name("z"))), List()), List(ObjectModel(Name("ClassName"), List(), List(), None, List(), List(), List(Method(Name("methodName"), List(), List(), List(), None, DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))))))
+      TestUtil.parse(code, StatementParser.moduleParser(_)) shouldBe Module(ModuleHeader(NameSpace(List(Name("x"), Name("y"), Name("z"))), List()), List(ObjectModel(Name("ClassName"), List(), List(), None, List(), List(), List(Method(Name("methodName"), List(), List(), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))))))
     }
 
     it("Should parse a class") {
@@ -25,7 +25,7 @@ class ModelParserTest extends AnyFunSpec with Matchers {
           |    let methodName() = do
           |        let x = 10
             """.stripMargin.replace("\r", "")
-      TestUtil.parse(code, StatementParser.moduleParser(_)) shouldBe Module(ModuleHeader(NameSpace(List(Name("x"), Name("y"), Name("z"))), List()), List(ClassModel(Name("ClassName"), List(), List(), None, List(), List(), List(Method(Name("methodName"), List(), List(), List(), None, DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))))))
+      TestUtil.parse(code, StatementParser.moduleParser(_)) shouldBe Module(ModuleHeader(NameSpace(List(Name("x"), Name("y"), Name("z"))), List()), List(ClassModel(Name("ClassName"), List(), List(), None, List(), List(), List(Method(Name("methodName"), List(), List(), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))))))
 
     }
   }
