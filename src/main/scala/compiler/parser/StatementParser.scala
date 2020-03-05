@@ -44,10 +44,7 @@ class Statements(indent: Int) {
 
   def elseP[_: P]: P[Statement] = P(LexicalParser.kw("else") ~/ blockParser).map(x => x)
 
-  def ifStatementParser[_: P]: P[If] = {
-
-    P(ifParser ~ elseParser.?).map(x => If(x._1, x._2, x._3))
-  }
+  def ifStatementParser[_: P]: P[If] = P(ifParser ~ elseParser.?).map(x => If(x._1, x._2, x._3))
 
   def importParser[_: P]: P[Import] = P(LexicalParser.kw("import") ~/ ExpressionParser.nameParser.rep(sep = ".")).map(Import)
 
@@ -71,9 +68,9 @@ class Statements(indent: Int) {
 
   def statementParser[_: P]: P[Statement] = P(!commentParser ~ (modelParser | ifStatementParser | methodParser | assignParser | reassignParser | exprAsStmt))
 
-  def commentLine[_: P] = P("\n" ~~ LexicalParser.nonewlinewscomment.?.map(_ => 0)).map((_, Some("")))
+  def commentLine[_: P]: P[(Int, Some[String])] = P("\n" ~~ LexicalParser.nonewlinewscomment.?.map(_ => 0)).map((_, Some("")))
 
-  def endLine[_: P] = P("\n" ~~ (" " | "\t").repX(indent + 1).!.map(_.length) ~~ LexicalParser.comment.!.?)
+  def endLine[_: P]: P[(Int, Option[String])] = P("\n" ~~ (" " | "\t").repX(indent + 1).!.map(_.length) ~~ LexicalParser.comment.!.?)
 
   def deeper[_: P]: P[Int] = {
     P(LexicalParser.nonewlinewscomment.? ~~ (endLine | commentLine).repX(1)).map {

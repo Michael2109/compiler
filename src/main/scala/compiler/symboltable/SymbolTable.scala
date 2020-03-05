@@ -2,13 +2,17 @@ package compiler.symboltable
 
 import scala.collection.mutable
 
-class SymbolTable {
+class SymbolTable(outerSymbolTable: Option[SymbolTable]) {
 
-  private lazy val innerSymbolTable: SymbolTable = new SymbolTable
+  private lazy val innerSymbolTable: SymbolTable = new SymbolTable(Some(this))
 
   private val imports: mutable.Map[String, List[String]] = mutable.HashMap()
 
   private val identifierToRow: mutable.Map[String, SymbolTableRow] = mutable.LinkedHashMap()
+
+  def getOuterSymbolTable(): Option[SymbolTable] = {
+    outerSymbolTable
+  }
 
   def getInnerSymbolTable(): SymbolTable = {
     innerSymbolTable
@@ -19,7 +23,13 @@ class SymbolTable {
   }
 
   def getImport(className: String): Option[List[String]] = {
-    imports.get(className)
+    imports.get(className) match {
+      case found: Some[List[String]] => found
+      case None => getOuterSymbolTable() match {
+        case Some(table) => table.getImport(className)
+        case None => None
+      }
+    }
   }
 
   def addRow(identifier: String, symbolTableRow: SymbolTableRow): Unit = {
@@ -27,7 +37,13 @@ class SymbolTable {
   }
 
   def findIdentifier(identifier: String): Option[SymbolTableRow] = {
-    identifierToRow.get(identifier)
+    identifierToRow.get(identifier) match {
+      case found: Some[SymbolTableRow] => found
+      case None => getOuterSymbolTable() match {
+        case Some(table) => table.findIdentifier(identifier)
+        case None => None
+      }
+    }
   }
 
   def getElementsSize(): Int = {
@@ -35,7 +51,7 @@ class SymbolTable {
   }
 
   def getNextElementId(structureType: StructureType): Int = {
-    identifierToRow.values.count(_.equals(structureType)) + 1
+    identifierToRow.values.count(v => v.structureType == structureType) + 1
   }
 
   override def toString: String = {

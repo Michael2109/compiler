@@ -4,8 +4,8 @@ import compiler.ast.AST._
 
 object SymbolTableCreator {
 
-  def genSymbolTable(module: compiler.ast.AST.Module): SymbolTable = {
-    val symbolTable = new SymbolTable
+  def genSymbolTable(module: Module): SymbolTable = {
+    val symbolTable = new SymbolTable(None)
     module.header.imports.foreach(imp => symbolTable.addImport(imp.loc.last.value, imp.loc.map(_.value).toList))
     module.models.foreach(genSymbolTable(symbolTable, _))
     symbolTable
@@ -34,6 +34,8 @@ object SymbolTableCreator {
     val symbolTableRow = SymbolTableRow(identifier, -1, "Unit", MethodStructure)
     innerSymbolTable.addRow(identifier, symbolTableRow)
 
+    method.parameters.foreach(genSymbolTable(innerSymbolTable, _))
+
     method.body match {
       case inline: Inline => {
         genSymbolTable(innerSymbolTable, inline)
@@ -44,10 +46,14 @@ object SymbolTableCreator {
     }
   }
 
+  def genSymbolTable(symbolTable: SymbolTable, parameter: Parameter): Unit ={
+    println("Added params: " + parameter)
+    symbolTable.addRow(parameter.name.value, SymbolTableRow(parameter.name.value, symbolTable.getNextElementId(VariableStructure), parameter.classType.value, VariableStructure))
+  }
+
   def genSymbolTable(symbolTable: SymbolTable, inline: Inline): Unit = {
     genSymbolTable(symbolTable, inline.expression)
   }
-
 
   def genSymbolTable(symbolTable: SymbolTable, doBlock: DoBlock): Unit = {
     doBlock.statement.foreach(statement => {

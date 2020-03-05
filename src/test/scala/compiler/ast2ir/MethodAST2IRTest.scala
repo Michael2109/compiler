@@ -15,19 +15,19 @@ class MethodAST2IRTest extends AnyFunSpec with Matchers {
     it("Should convert a static method to IR") {
 
       val method: Method = Method(Name("methodName"), List(), List(), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))
-      val symbolTable = new SymbolTable
+      val symbolTable = new SymbolTable(None)
 
       SymbolTableCreator.genSymbolTable(symbolTable, method)
-      val ir = AST2IR.methodToIR(symbolTable, method)
+      val ir = AST2IR.methodToIR(symbolTable, method, false)
       ir shouldBe MethodIR(List(PublicIR),"methodName","V",List(),List(IConst0(10), IStore(1)))
     }
 
     it("Should convert a method with parameters"){
       val method: Method = Method(Name("methodName"), List(), List(Parameter(Name("x"), Type("Int"), None)), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))
-      val symbolTable = new SymbolTable
+      val symbolTable = new SymbolTable(None)
 
       SymbolTableCreator.genSymbolTable(symbolTable, method)
-      val ir = AST2IR.methodToIR(symbolTable, method)
+      val ir = AST2IR.methodToIR(symbolTable, method, false)
       ir shouldBe MethodIR(List(PublicIR),"methodName","V",List(ParameterIR(List(),"x","I")),List(IConst0(10), IStore(1)))
     }
   }

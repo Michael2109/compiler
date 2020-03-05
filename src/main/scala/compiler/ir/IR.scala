@@ -2,7 +2,9 @@ package compiler.ir
 
 object IR {
 
-  case class CompilationUnitIR(classes: Seq[ModelIR])
+  case class CompilationUnitIR(nameSpaceIR: NameSpaceIR, classes: Seq[ModelIR])
+
+  case class NameSpaceIR(location: List[String])
 
   case class ModelIR(modelTypeIR: ModelTypeIR, modifiers: List[ModifierIR], name: String, extendedBy: Option[String], interfaces: List[String], fields: List[FieldIR], methods: Seq[MethodIR])
 
@@ -35,11 +37,15 @@ object IR {
 
   case object Dup extends InstructionIR
 
+  case class GetStatic(internalName: String, staticVariableName: String, typeDescriptor: String) extends InstructionIR
+
   case class PutStatic(fieldLocation: String, fieldName: String, clazz: String) extends InstructionIR
 
   case class ALoad(value: Int) extends InstructionIR
 
   case class InvokeSpecial(clazz: String, methodName: String, description: String) extends InstructionIR
+
+  case object AReturnIR extends InstructionIR
 
   case object ReturnIR extends InstructionIR
 
