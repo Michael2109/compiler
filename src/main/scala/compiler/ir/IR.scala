@@ -35,11 +35,15 @@ object IR {
 
   case object Dup extends InstructionIR
 
+  case class GetStatic(internalName: String, staticVariableName: String, typeDescriptor: String) extends InstructionIR
+
   case class PutStatic(fieldLocation: String, fieldName: String, clazz: String) extends InstructionIR
 
   case class ALoad(value: Int) extends InstructionIR
 
   case class InvokeSpecial(clazz: String, methodName: String, description: String) extends InstructionIR
+
+  case object AReturnIR extends InstructionIR
 
   case object ReturnIR extends InstructionIR
 

@@ -17,7 +17,7 @@ class AssignmentBytecodeTest extends AnyFunSpec with Matchers {
       val code =
         """package x.y.z
           |class ClassName
-          |    let methodName() = do
+          |    let methodName(): Unit = do
           |        let x = 10 + 10
             """.stripMargin.replace("\r", "")
       val module = TestUtil.parse(code, StatementParser.moduleParser(_)).asInstanceOf[Module]

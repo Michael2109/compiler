@@ -45,9 +45,14 @@ object CodeGen {
       InstructionCodeGen.genInstructionCode(bytecode, instruction)
     })
 
+
     val methodInfo = new MethodInfo(classFile.getConstPool, methodIR.identifier, "()" + methodIR.`type`)
     methodInfo.setAccessFlags(modifiers)
     methodInfo.setCodeAttribute(bytecode.toCodeAttribute)
+
+    val methodParameters: String = methodIR.parameters.map(parameter => parameter.signature).mkString
+
+    methodInfo.setDescriptor(s"($methodParameters)${methodIR.`type`}")
 
     classFile.addMethod(methodInfo)
   }

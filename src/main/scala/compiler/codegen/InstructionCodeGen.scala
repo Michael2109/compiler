@@ -17,7 +17,9 @@ object InstructionCodeGen {
       case iConst0: IConst0 => bytecode.addIconst(iConst0.value)
       case IStore(id) => bytecode.addIstore(id)
       case invokeSpecial: InvokeSpecial => bytecode.addInvokespecial(invokeSpecial.clazz, invokeSpecial.methodName, invokeSpecial.description)
+      case getStatic: GetStatic => bytecode.addGetstatic(getStatic.internalName, getStatic.staticVariableName, getStatic.typeDescriptor)
       case putStatic: PutStatic => bytecode.addPutstatic(putStatic.fieldLocation, putStatic.fieldName, putStatic.clazz)
+      case AReturnIR => bytecode.addOpcode(Opcode.ARETURN)
       case ReturnIR => bytecode.addReturn(null)
       case maxLocals: MaxLocals => bytecode.setMaxLocals(maxLocals.value)
     }

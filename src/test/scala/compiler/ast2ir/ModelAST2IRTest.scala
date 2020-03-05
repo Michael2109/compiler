@@ -15,7 +15,7 @@ class ModelAST2IRTest extends AnyFunSpec with Matchers {
     it("Should convert class model to IR") {
 
       val model: Model = ClassModel(Name("ClassName"), List(), List(), None, List(), List(), List(Method(Name("methodName"), List(), List(), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))))
-      val symbolTable = new SymbolTable
+      val symbolTable = new SymbolTable(None)
 
       SymbolTableCreator.genSymbolTable(symbolTable, model)
       val ir = AST2IR.modelToIR(symbolTable, model)
@@ -28,7 +28,7 @@ class ModelAST2IRTest extends AnyFunSpec with Matchers {
     it("Should convert object model to IR") {
 
       val model: Model = ObjectModel(Name("ClassName"), List(), List(), None, List(), List(), List(Method(Name("methodName"), List(), List(), List(), Type("Unit"), DoBlock(List(Assign(Name("x"), None, true, Inline(IntConst(10))))))))
-      val symbolTable = new SymbolTable
+      val symbolTable = new SymbolTable(None)
 
       SymbolTableCreator.genSymbolTable(symbolTable, model)
       val ir = AST2IR.modelToIR(symbolTable, model)

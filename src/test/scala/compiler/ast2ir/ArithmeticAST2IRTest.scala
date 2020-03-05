@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class ArithmeticAST2IRTest extends AnyFunSpec with Matchers {
   describe("Arithmetic AST to IR") {
-    val symbolTable = new SymbolTable
+    val symbolTable = new SymbolTable(None)
 
     it("Should convert addition") {
       val ir = AST2IR.expressionToIR(symbolTable, ABinary(Add, IntConst(14), IntConst(105)))
