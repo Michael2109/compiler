@@ -15,9 +15,6 @@ object CompileTester {
     val code =
       """package x.y.z
         |object ClassName
-        |    let methodName(): Int = do
-        |        let x = 10
-        |        let y = 2
         |    let main(test: Int): Unit = do
         |        let x = 200
         |        let y = 200 * 2

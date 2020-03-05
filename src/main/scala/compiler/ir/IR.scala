@@ -2,7 +2,9 @@ package compiler.ir
 
 object IR {
 
-  case class CompilationUnitIR(classes: Seq[ModelIR])
+  case class CompilationUnitIR(nameSpaceIR: NameSpaceIR, classes: Seq[ModelIR])
+
+  case class NameSpaceIR(location: List[String])
 
   case class ModelIR(modelTypeIR: ModelTypeIR, modifiers: List[ModifierIR], name: String, extendedBy: Option[String], interfaces: List[String], fields: List[FieldIR], methods: Seq[MethodIR])
 

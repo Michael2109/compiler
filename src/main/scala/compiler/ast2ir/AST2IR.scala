@@ -7,7 +7,11 @@ import compiler.symboltable.SymbolTable
 object AST2IR {
 
   def moduleToIR(symbolTable: SymbolTable, module: compiler.ast.AST.Module): CompilationUnitIR = {
-    CompilationUnitIR(module.models.map(model => modelToIR(symbolTable, model)))
+    CompilationUnitIR(nameSpaceToIR(symbolTable, module.header.nameSpace), module.models.map(model => modelToIR(symbolTable, model)))
+  }
+
+  def nameSpaceToIR(symbolTable: SymbolTable, nameSpace: NameSpace): NameSpaceIR = {
+    NameSpaceIR(nameSpace.nameSpace.map(_.value).toList)
   }
 
   def modelToIR(symbolTable: SymbolTable, model: Model): ModelIR = {
@@ -53,6 +57,9 @@ object AST2IR {
     val instructions = blockToIR(innerSymbolTable, method.body)
 
     val isMainMethod = method.name.value.equals("main")
+
+    println("Symbol table")
+    println(innerSymbolTable)
 
     val modifiers = if (!isMainMethod) {
       method.modifiers.map {
