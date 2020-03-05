@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="default"
+		module="compiler_2.13"
+		revision="0.1"
+		conf="compile-internal"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
+		date="20200226140943"/>
+	<dependencies>
+		<module organisation="org.javassist" name="javassist">
+			<revision name="3.26.0-GA" status="release" pubdate="20191002185834" resolver="public" artresolver="public" homepage="http://www.javassist.org/" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="4">
+				<license name="MPL 1.1" url="http://www.mozilla.org/MPL/MPL-1.1.html"/>
+				<license name="LGPL 2.1" url="http://www.gnu.org/licenses/lgpl-2.1.html"/>
+				<license name="Apache License 2.0" url="http://www.apache.org/licenses/"/>
+				<metadata-artifact status="successful" details="" size="10772" time="68" location="C:\Users\michael.haywood\.ivy2\cache\org.javassist\javassist\ivy-3.26.0-GA.xml" searched="true" original-local-location="C:\Users\michael.haywood\.ivy2\cache\org.javassist\javassist\ivy-3.26.0-GA.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA.pom"/>
+				<caller organisation="default" name="compiler_2.13" conf="compile-internal, compile, provided, optional" rev="3.26.0-GA" rev-constraint-default="3.26.0-GA" rev-constraint-dynamic="3.26.0-GA" callerrev="0.1"/>
+				<artifacts>
+					<artifact name="javassist" type="bundle" ext="jar" status="successful" details="" size="782535" time="238" location="C:\Users\michael.haywood\.ivy2\cache\org.javassist\javassist\bundles\javassist-3.26.0-GA.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.lihaoyi" name="fastparse_2.13">
+			<revision name="2.2.2" status="release" pubdate="20191226022247" resolver="public" artresolver="public" homepage="https://github.com/lihaoyi/fastparse" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+				<license name="MIT" url="https://spdx.org/licenses/MIT.html"/>
+				<metadata-artifact status="successful" details="" size="1653" time="481" location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\fastparse_2.13\ivy-2.2.2.xml" searched="true" original-local-location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\fastparse_2.13\ivy-2.2.2.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/lihaoyi/fastparse_2.13/2.2.2/fastparse_2.13-2.2.2.pom"/>
+				<caller organisation="default" name="compiler_2.13" conf="compile-internal, compile, provided, optional" rev="2.2.2" rev-constraint-default="2.2.2" rev-constraint-dynamic="2.2.2" callerrev="0.1"/>
+				<artifacts>
+					<artifact name="fastparse_2.13" type="jar" ext="jar" status="successful" details="" size="317478" time="1056" location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\fastparse_2.13\jars\fastparse_2.13-2.2.2.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/lihaoyi/fastparse_2.13/2.2.2/fastparse_2.13-2.2.2.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.lihaoyi" name="geny_2.13">
+			<revision name="0.4.2" status="release" pubdate="20191224224517" resolver="public" artresolver="public" homepage="https://github.com/lihaoyi/geny" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="3">
+				<license name="MIT" url="https://spdx.org/licenses/MIT.html"/>
+				<metadata-artifact status="successful" details="" size="1059" time="248" location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\geny_2.13\ivy-0.4.2.xml" searched="true" original-local-location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\geny_2.13\ivy-0.4.2.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/lihaoyi/geny_2.13/0.4.2/geny_2.13-0.4.2.pom"/>
+				<caller organisation="com.lihaoyi" name="fastparse_2.13" conf="default, compile, runtime, master" rev="0.4.2" rev-constraint-default="0.4.2" rev-constraint-dynamic="0.4.2" callerrev="2.2.2"/>
+				<artifacts>
+					<artifact name="geny_2.13" type="jar" ext="jar" status="successful" details="" size="73246" time="739" location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\geny_2.13\jars\geny_2.13-0.4.2.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/lihaoyi/geny_2.13/0.4.2/geny_2.13-0.4.2.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.lihaoyi" name="sourcecode_2.13">
+			<revision name="0.1.7" status="release" pubdate="20190607174322" resolver="public" artresolver="public" homepage="https://github.com/lihaoyi/sourcecode" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*), master" position="2">
+				<license name="MIT" url="http://www.opensource.org/licenses/mit-license.html"/>
+				<metadata-artifact status="successful" details="" size="2045" time="69" location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\sourcecode_2.13\ivy-0.1.7.xml" searched="true" original-local-location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\sourcecode_2.13\ivy-0.1.7.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/lihaoyi/sourcecode_2.13/0.1.7/sourcecode_2.13-0.1.7.pom"/>
+				<caller organisation="com.lihaoyi" name="fastparse_2.13" conf="default, compile, runtime, master" rev="0.1.7" rev-constraint-default="0.1.7" rev-constraint-dynamic="0.1.7" callerrev="2.2.2"/>
+				<artifacts>
+					<artifact name="sourcecode_2.13" type="bundle" ext="jar" status="successful" details="" size="112731" time="1126" location="C:\Users\michael.haywood\.ivy2\cache\com.lihaoyi\sourcecode_2.13\bundles\sourcecode_2.13-0.1.7.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/lihaoyi/sourcecode_2.13/0.1.7/sourcecode_2.13-0.1.7.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.13.1" status="release" pubdate="20190918095936" resolver="public" artresolver="public" homepage="https://www.scala-lang.org/" extra-info.apiURL="https://www.scala-lang.org/api/2.13.1/" downloaded="false" searched="false" default="false" conf="default, compile, runtime(*), master(compile), runtime, default(compile), compile(*), master" position="0">
+				<license name="Apache-2.0" url="https://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="2703" time="0" location="C:\Users\michael.haywood\.ivy2\cache\org.scala-lang\scala-library\ivy-2.13.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.1/scala-library-2.13.1.pom"/>
+				<caller organisation="com.lihaoyi" name="sourcecode_2.13" conf="compile, runtime" rev="2.13.1" rev-constraint-default="2.13.1" rev-constraint-dynamic="2.13.1" callerrev="0.1.7"/>
+				<caller organisation="default" name="compiler_2.13" conf="compile-internal, compile, provided, optional" rev="2.13.1" rev-constraint-default="2.13.1" rev-constraint-dynamic="2.13.1" callerrev="0.1"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="5721063" time="0" location="C:\Users\michael.haywood\.ivy2\cache\org.scala-lang\scala-library\jars\scala-library-2.13.1.jar">
+						<origin-location is-local="false" location="UNKNOWN"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>
