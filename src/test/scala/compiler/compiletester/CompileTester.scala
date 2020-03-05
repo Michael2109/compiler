@@ -18,6 +18,7 @@ object CompileTester {
         |    let main(test: Int): Unit = do
         |        let x = 200
         |        let y = 200 * 2
+        |        println(x)
             """.stripMargin.replace("\r", "")
     val module: Module = TestUtil.parse(code, StatementParser.moduleParser(_)).asInstanceOf[Module]
 

@@ -65,6 +65,7 @@ object SymbolTableCreator {
     expression match {
       case _: IntConst =>
       case _: ABinary =>
+      case methodCall: MethodCall =>
     }
   }
 
@@ -78,6 +79,7 @@ object SymbolTableCreator {
         symbolTable.addRow(name.value, new SymbolTableRow(identifier, id, "Void", VariableStructure))
         genSymbolTable(symbolTable, block)
       }
+      case exprAsStmt: ExprAsStmt => genSymbolTable(symbolTable, exprAsStmt.expression)
     }
   }
 }

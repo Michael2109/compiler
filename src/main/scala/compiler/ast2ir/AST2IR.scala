@@ -101,13 +101,8 @@ object AST2IR {
   def expressionToIR(symbolTable: SymbolTable, expression: Expression): List[InstructionIR] = {
     expression match {
       case IntConst(value) => List(IConst0(value.intValue))
-      case ABinary(op, expr1, expr2) => {
-
-        expressionToIR(symbolTable, expr1) ++
-          expressionToIR(symbolTable, expr2) :+
-          opToIR(symbolTable, op)
-
-      }
+      case ABinary(op, expr1, expr2) => expressionToIR(symbolTable, expr1) ++ expressionToIR(symbolTable, expr2) :+ opToIR(symbolTable, op)
+      case methodCall: MethodCall => methodCallToIR(symbolTable, methodCall)
     }
   }
 
@@ -120,19 +115,26 @@ object AST2IR {
     }
   }
 
+  def methodCallToIR(symbolTable: SymbolTable, call: MethodCall): MethodCallIR ={
+
+  }
+
   def statementToIR(symbolTable: SymbolTable, statement: Statement): List[InstructionIR] = {
 
     statement match {
-      case assign: Assign => {
-        val identifier = symbolTable.findIdentifier(assign.name.value)
+      case assign: Assign => assignmentToIR(symbolTable, assign)
+      case exprAsStmt: ExprAsStmt => expressionToIR(exprAsStmt.expression)
+    }
+  }
 
-        if (identifier.isEmpty) {
-          throw new Exception(s"Identifier ${assign.name.value} not found in symbol table: $symbolTable")
-        } else {
-          val instructions: List[InstructionIR] = blockToIR(symbolTable, assign.block) :+ IStore(identifier.get.id)
-          instructions
-        }
-      }
+  def assignmentToIR(symbolTable: SymbolTable, assign: Assign): List[InstructionIR] = {
+    val identifier = symbolTable.findIdentifier(assign.name.value)
+
+    if (identifier.isEmpty) {
+      throw new Exception(s"Identifier ${assign.name.value} not found in symbol table: $symbolTable")
+    } else {
+      val instructions: List[InstructionIR] = blockToIR(symbolTable, assign.block) :+ IStore(identifier.get.id)
+      instructions
     }
   }
 
