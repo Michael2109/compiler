@@ -57,3 +57,4 @@ fabric.properties
 project\
 
 target\
+/project/target/
