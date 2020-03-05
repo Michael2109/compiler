@@ -56,4 +56,4 @@ fabric.properties
 .idea\
 project\
 
-target\
+/target/
