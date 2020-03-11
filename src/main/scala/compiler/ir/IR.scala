@@ -43,6 +43,8 @@ object IR {
 
   case class ALoad(value: Int) extends InstructionIR
 
+  case class InvokeVirtual(clazz: String, methodName: String, description: String) extends InstructionIR
+
   case class InvokeSpecial(clazz: String, methodName: String, description: String) extends InstructionIR
 
   case object AReturnIR extends InstructionIR

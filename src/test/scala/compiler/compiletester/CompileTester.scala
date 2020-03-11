@@ -19,10 +19,13 @@ object CompileTester {
         |        let x = 200
         |        let y = 200 * 2
         |        println(x)
+        |
+        |    let println(x: Int): Unit = do
+        |        let z = 2000
             """.stripMargin.replace("\r", "")
     val module: Module = TestUtil.parse(code, StatementParser.moduleParser(_)).asInstanceOf[Module]
 
-
+println(module)
     val symbolTable =  SymbolTableCreator.genSymbolTable(module)
     val compilationUnitIR = AST2IR.moduleToIR(symbolTable, module)
 

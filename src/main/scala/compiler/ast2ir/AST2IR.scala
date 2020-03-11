@@ -1,8 +1,9 @@
 package compiler.ast2ir
 
 import compiler.ast.AST.{Add, _}
+import compiler.ast.IRUtils
 import compiler.ir.IR._
-import compiler.symboltable.SymbolTable
+import compiler.symboltable.{MethodStructure, SymbolTable}
 
 object AST2IR {
 
@@ -37,9 +38,9 @@ object AST2IR {
 
     val constructor = MethodIR(List(PublicIR), "<init>", "V", List(), List(ALoad(0), InvokeSpecial("java/lang/Object", "<init>", "()V"), ReturnIR))
 
-    val modelInternalName = getInternalName(symbolTable, model.name.value).get
+    val modelInternalName = IRUtils.getInternalName(symbolTable, model.name.value).get
 
-    val modelTypeDescriptor = getTypeDescriptor(symbolTable, model.name.value).get
+    val modelTypeDescriptor =  IRUtils.getTypeDescriptor(symbolTable, model.name.value).get
 
     val getInstanceMethod = MethodIR(List(PublicIR, StaticIR), "getInstance$", model.name.value, List(), List(GetStatic(modelInternalName, "instance$", modelTypeDescriptor), AReturnIR))
 
@@ -72,7 +73,7 @@ object AST2IR {
 
     val parameters = if (!isMainMethod) {
       method.parameters.map(parameter => {
-        getTypeDescriptor(symbolTable, parameter.classType.value) match {
+        IRUtils.getTypeDescriptor(symbolTable, parameter.classType.value) match {
           case Some(value) => ParameterIR(List(), parameter.name.value, value)
           case None => throw new Exception(s"Type descriptor not found: ${parameter.classType.value}")
         }
@@ -83,7 +84,7 @@ object AST2IR {
 
     val returnTypeClass = method.returnType.value
 
-    val returnTypeDescriptor = getTypeDescriptor(symbolTable, returnTypeClass) match {
+    val returnTypeDescriptor =  IRUtils.getTypeDescriptor(symbolTable, returnTypeClass) match {
       case Some(returnType) => returnType
       case None => throw new Exception(s"No method return type: ${returnTypeClass}")
     }
@@ -102,7 +103,8 @@ object AST2IR {
     expression match {
       case IntConst(value) => List(IConst0(value.intValue))
       case ABinary(op, expr1, expr2) => expressionToIR(symbolTable, expr1) ++ expressionToIR(symbolTable, expr2) :+ opToIR(symbolTable, op)
-      case methodCall: MethodCall => methodCallToIR(symbolTable, methodCall)
+      case methodCall: MethodCall => methodCallToIR(symbolTable, methodCall, true)
+      case nestedExpr: NestedExpr =>nestedExprToIR(symbolTable, nestedExpr)
     }
   }
 
@@ -115,20 +117,47 @@ object AST2IR {
     }
   }
 
-  def methodCallToIR(symbolTable: SymbolTable, call: MethodCall): MethodCallIR ={
+  def methodCallToIR(symbolTable: SymbolTable, methodCall: MethodCall, isFirst: Boolean): List[InstructionIR] ={
 
+    symbolTable.getByIdentifier(methodCall.name.value) match {
+      case Some(row) => row match {
+        case MethodStructure(name, signature) => {
+          val methodSignature: String =  IRUtils.getInternalName(symbolTable, signature).get
+
+          if(isFirst){
+            List(ALoad(0),  InvokeVirtual("ClassName",methodCall.name.value,methodSignature))
+          } else {
+            List(InvokeVirtual("ClassName",methodCall.name.value, methodSignature))
+          }
+        }
+        case _ => throw new Exception(methodCall.toString)
+      }
+      case None => throw new Exception(methodCall.toString)
+    }
+
+
+  }
+
+  def nestedExprToIR(symbolTable: SymbolTable, nestedExpr: NestedExpr):  List[InstructionIR]  ={
+    // Get the first element
+    // If is a method call then push the object onto the stack
+
+    nestedExpr.expressions.head match {
+      case methodCall: MethodCall => methodCallToIR(symbolTable, methodCall, true) ++ nestedExpr.expressions.drop(1).map(expressionToIR(symbolTable, _)).toList.asInstanceOf[List[InstructionIR]]
+      case _ => nestedExpr.expressions.map(expressionToIR(symbolTable, _)).toList.asInstanceOf[List[InstructionIR]]
+    }
   }
 
   def statementToIR(symbolTable: SymbolTable, statement: Statement): List[InstructionIR] = {
 
     statement match {
       case assign: Assign => assignmentToIR(symbolTable, assign)
-      case exprAsStmt: ExprAsStmt => expressionToIR(exprAsStmt.expression)
+      case exprAsStmt: ExprAsStmt => expressionToIR(symbolTable, exprAsStmt.expression)
     }
   }
 
   def assignmentToIR(symbolTable: SymbolTable, assign: Assign): List[InstructionIR] = {
-    val identifier = symbolTable.findIdentifier(assign.name.value)
+    val identifier = symbolTable.getByIdentifier(assign.name.value)
 
     if (identifier.isEmpty) {
       throw new Exception(s"Identifier ${assign.name.value} not found in symbol table: $symbolTable")
@@ -137,37 +166,4 @@ object AST2IR {
       instructions
     }
   }
-
-  /**
-   * Example: com/snark/Boojum
-   *
-   * @param symbolTable
-   * @param className
-   * @return
-   */
-  def getInternalName(symbolTable: SymbolTable, className: String): Option[String] = {
-    symbolTable.getImport(className) match {
-      case Some(locations) => Some(locations.mkString("/"))
-      case None => None
-    }
-  }
-
-  /**
-   * Example: [[Ljava/lang/Object;
-   *
-   * @param symbolTable
-   * @param className
-   * @return
-   */
-  def getTypeDescriptor(symbolTable: SymbolTable, className: String): Option[String] = {
-    getInternalName(symbolTable, className) match {
-      case Some(internalName) => Some(s"L$internalName;")
-      case None => className match {
-        case "Unit" => Some("V")
-        case "Int" => Some("I")
-        case _ => None
-      }
-    }
-  }
-
 }

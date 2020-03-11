@@ -31,10 +31,13 @@ object SymbolTableCreator {
   def genSymbolTable(symbolTable: SymbolTable, method: Method): Unit = {
     val innerSymbolTable = symbolTable.getInnerSymbolTable()
     val identifier = method.name.value
-    val symbolTableRow = SymbolTableRow(identifier, -1, "Unit", MethodStructure)
+
+    val symbolTableRow = SymbolTableRow(identifier, -1, "Unit", MethodStructure(identifier, signature))
     innerSymbolTable.addRow(identifier, symbolTableRow)
 
     method.parameters.foreach(genSymbolTable(innerSymbolTable, _))
+
+    symbolTable.addRow(method.name.value, SymbolTableRow(method.name.value, -1, method.returnType.value))
 
     method.body match {
       case inline: Inline => {

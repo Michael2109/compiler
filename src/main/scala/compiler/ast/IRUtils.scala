@@ -2,8 +2,49 @@ package compiler.ast
 
 import com.sun.xml.internal.ws.org.objectweb.asm.Opcodes
 import compiler.ast.AST._
+import compiler.symboltable.SymbolTable
 
 object IRUtils {
+
+  /**
+   * Example: com/snark/Boojum
+   *
+   * @param symbolTable
+   * @param className
+   * @return
+   */
+  def getInternalName(symbolTable: SymbolTable, className: String): Option[String] = {
+    symbolTable.getImport(className) match {
+      case Some(locations) => Some(locations.mkString("/"))
+      case None => None
+    }
+  }
+
+  /**
+   * Example: [[Ljava/lang/Object;
+   *
+   * @param symbolTable
+   * @param className
+   * @return
+   */
+  def getTypeDescriptor(symbolTable: SymbolTable, className: String): Option[String] = {
+    getInternalName(symbolTable, className) match {
+      case Some(internalName) => Some(s"L$internalName;")
+      case None => className match {
+        case "Unit" => Some("V")
+        case "Int" => Some("I")
+        case _ => None
+      }
+    }
+  }
+
+  def getMethodSignature(symbolTable: SymbolTable, parameters: List[Parameter], returnType: String): String ={
+    val paramDescriptors = parameters.map(parameter => getTypeDescriptor(symbolTable, parameter.classType.value)).mkString
+    val returnTypeDescriptor = getTypeDescriptor(symbolTable, returnType)
+
+    s"($paramDescriptors)$returnTypeDescriptor"
+  }
+
   /*
     def typeStringToTypeIR(t: String): TypeIR = {
       t match {

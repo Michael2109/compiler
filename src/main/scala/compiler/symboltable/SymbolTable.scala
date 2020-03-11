@@ -36,11 +36,11 @@ class SymbolTable(outerSymbolTable: Option[SymbolTable]) {
     identifierToRow += (identifier -> symbolTableRow)
   }
 
-  def findIdentifier(identifier: String): Option[SymbolTableRow] = {
+  def getByIdentifier(identifier: String): Option[SymbolTableRow] = {
     identifierToRow.get(identifier) match {
       case found: Some[SymbolTableRow] => found
       case None => getOuterSymbolTable() match {
-        case Some(table) => table.findIdentifier(identifier)
+        case Some(table) => table.getByIdentifier(identifier)
         case None => None
       }
     }
@@ -50,7 +50,7 @@ class SymbolTable(outerSymbolTable: Option[SymbolTable]) {
     identifierToRow.size
   }
 
-  def getNextElementId(structureType: StructureType): Int = {
+  def getNextElementId(structureType: SymbolTableRow): Int = {
     identifierToRow.values.count(v => v.structureType == structureType) + 1
   }
 
@@ -59,14 +59,12 @@ class SymbolTable(outerSymbolTable: Option[SymbolTable]) {
   }
 }
 
-case class SymbolTableRow(identifier: String, id: Int, returnType: String, structureType: StructureType)
+trait SymbolTableRow
 
-trait StructureType
+case class ClassStructure(name: String, extendedClass: Option[String]) extends SymbolTableRow
 
-case object ClassStructure extends StructureType
+case class MethodStructure(name: String, signature: String) extends SymbolTableRow
 
-case object MethodStructure extends StructureType
+case class FieldStructure(name: String, typeDescriptor: String) extends SymbolTableRow
 
-case object FieldStructure extends StructureType
-
-case object VariableStructure extends StructureType
+case class VariableStructure(identifier: String, id: Int, returnType: String) extends SymbolTableRow

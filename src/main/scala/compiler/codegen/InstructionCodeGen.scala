@@ -16,6 +16,7 @@ object InstructionCodeGen {
       case IDivide => bytecode.add(Opcode.IDIV)
       case iConst0: IConst0 => bytecode.addIconst(iConst0.value)
       case IStore(id) => bytecode.addIstore(id)
+      case invokeVirtual: InvokeVirtual => bytecode.addInvokevirtual(invokeVirtual.clazz, invokeVirtual.methodName, invokeVirtual.description)
       case invokeSpecial: InvokeSpecial => bytecode.addInvokespecial(invokeSpecial.clazz, invokeSpecial.methodName, invokeSpecial.description)
       case getStatic: GetStatic => bytecode.addGetstatic(getStatic.internalName, getStatic.staticVariableName, getStatic.typeDescriptor)
       case putStatic: PutStatic => bytecode.addPutstatic(putStatic.fieldLocation, putStatic.fieldName, putStatic.clazz)
